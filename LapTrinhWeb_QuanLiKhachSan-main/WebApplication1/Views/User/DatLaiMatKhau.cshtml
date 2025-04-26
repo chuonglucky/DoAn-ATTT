@@ -1,0 +1,175 @@
+﻿@{
+    ViewBag.Title = "Đặt lại mật khẩu";
+    Layout = null;
+}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: #f0f2f5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .reset-password-page {
+        width: 100%;
+        max-width: 400px;
+        background: #fff;
+        border-radius: 8px;
+        padding: 30px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        text-align: center;
+    }
+
+    .reset-password-container {
+        width: 100%;
+    }
+
+    h2 {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+        text-align: left;
+    }
+
+        .form-group label {
+            font-size: 14px;
+            color: #333;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+
+            .form-group input:focus {
+                border-color: #2575fc;
+                outline: none;
+                box-shadow: 0 0 5px rgba(37, 117, 252, 0.5);
+                background: #fff;
+            }
+
+    .error {
+        display: block;
+        font-size: 12px;
+        color: red;
+        margin-top: 5px;
+    }
+
+    .nut {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .btn-reset-password {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        background: #2575fc;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+        .btn-reset-password:hover {
+            background: #1e63d8;
+        }
+
+    .error {
+        color: red;
+        font-size: 14px;
+    }
+
+    .success {
+        color: green;
+        font-size: 14px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .nut {
+        margin-top: 20px;
+    }
+
+    .btn-reset-password {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+    }
+
+        .btn-reset-password:hover {
+            background-color: #45a049;
+        }
+
+</style>
+<div class="reset-password-page">
+    <div class="reset-password-container">
+        <h2>Đặt lại mật khẩu</h2>
+        <form method="post" action="/User/DatLaiMatKhau">
+            <!-- Hiển thị thông báo lỗi cho mật khẩu mới -->
+            @if (TempData["ErrPassword"] != null)
+            {
+                <span class="error">@TempData["ErrPassword"]</span>
+            }
+
+            <div class="form-group">
+                <label for="newPassword">Mật khẩu mới</label>
+                <input type="password" id="newPassword" name="newPassword" placeholder="Nhập mật khẩu mới" required />
+            </div>
+
+            <!-- Hiển thị thông báo lỗi cho mật khẩu nhập lại -->
+            @if (TempData["ErrConfirmPassword"] != null)
+            {
+                <span class="error">@TempData["ErrConfirmPassword"]</span>
+            }
+
+            <div class="form-group">
+                <label for="confirmPassword">Nhập lại mật khẩu mới</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Nhập lại mật khẩu mới" required />
+            </div>
+
+            <!-- Hiển thị thông báo lỗi cho email nếu có -->
+            @if (TempData["ErrEmail"] != null)
+            {
+                <span class="error">@TempData["ErrEmail"]</span>
+            }
+
+            <div class="form-group">
+                <label for="email">Địa chỉ email</label>
+                <input type="email" id="email" name="email" placeholder="Nhập email của bạn" required />
+            </div>
+
+            <!-- Nút gửi yêu cầu -->
+            <div class="nut">
+                <button type="submit" class="btn-reset-password">Đặt lại mật khẩu</button>
+            </div>
+
+            <!-- Hiển thị thông báo thành công nếu có -->
+            @if (TempData["ThongBao"] != null)
+            {
+                <span class="success">@TempData["ThongBao"]</span>
+            }
+        </form>
+    </div>
+</div>
+

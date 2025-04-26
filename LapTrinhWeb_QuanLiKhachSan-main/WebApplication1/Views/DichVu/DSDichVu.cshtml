@@ -1,0 +1,117 @@
+﻿@model IEnumerable<WebApplication1.Models.DICHVU>
+
+@{
+    ViewBag.Title = "Danh Sách Dịch Vụ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.DiaChi = 2;
+}
+
+<link rel="stylesheet" href="~/StyleCSS/DichVu.css" />
+
+<!-- Danh Sách Dịch Vụ -->
+<section class="ftco-section bg-light ftco-no-pt">
+    <div class="container">
+        <div class="row no-gutters justify-content-center pb-5 mb-3">
+            <div class="col-md-7 heading-section text-center ftco-animate">
+                <h2>Danh Sách Dịch Vụ</h2>
+            </div>
+        </div>
+        <div class="row">
+            @if (Model != null && Model.Any())
+            {
+                foreach (var dichVu in Model)
+                {
+                    <div class="services-1 col-md-3 ftco-animate">
+                        <h3 class="heading text-primary">@dichVu.TenDV</h3>
+                        <p>
+                            @if (string.IsNullOrEmpty(dichVu.Mota))
+                            {
+                                <text>Không có mô tả</text>
+                            }
+                            else
+                            {
+                                @Html.Raw(dichVu.Mota.Length > 50 ? dichVu.Mota.Substring(0, 50) + "..." : dichVu.Mota)
+                            }
+                        </p>
+                        <p class="text-danger font-weight-bold">Giá: @String.Format("{0:0,0} VND", dichVu.Gia)</p>
+                        <a href="@Url.Action("ChiTietDichVu", "DichVu", new { id = dichVu.MaDV })" class="btn btn-primary">Tìm hiểu</a>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-center">Không có dịch vụ nào để hiển thị.</p>
+            }
+        </div>
+    </div>
+</section>
+
+
+
+<!-- Tiện Ích -->
+<!-- Tiện Ích -->
+<footer class="footer">
+    <div class="container">
+        <!-- Phần tiêu đề -->
+        <div class="row no-gutters justify-content-center pb-5 mb-3">
+            <div class="col-md-7 heading-section text-center ftco-animate">
+                <h2>Tiện Ích</h2>
+            </div>
+        </div>
+        <!-- Phần các mục tiện ích -->
+        <div class="row services-2">
+            <!-- Item 1 -->
+            <div class="col-md-2 d-flex justify-content-center align-items-center ftco-animate mb-4">
+                <div class="service-item text-center">
+                    <div class="icon">
+                        <span class="flaticon-diet"></span>
+                    </div>
+                    <h3>Trà và Cà Phê</h3>
+                    <p>Một con sông nhỏ tên Duden chảy qua nơi đây và cung cấp những điều cần thiết.</p>
+                </div>
+            </div>
+            <!-- Item 2 -->
+            <div class="col-md-2 d-flex justify-content-center align-items-center ftco-animate mb-4">
+                <div class="service-item text-center">
+                    <div class="icon">
+                        <span class="flaticon-workout"></span>
+                    </div>
+                    <h3>Vòi Sen Nước Nóng</h3>
+                    <p>Một con sông nhỏ tên Duden chảy qua nơi đây và cung cấp những điều cần thiết.</p>
+                </div>
+            </div>
+            <!-- Item 3 -->
+            <div class="col-md-2 d-flex justify-content-center align-items-center ftco-animate mb-4">
+                <div class="service-item text-center">
+                    <div class="icon">
+                        <span class="flaticon-diet-1"></span>
+                    </div>
+                    <h3>Dịch Vụ Giặt Ủi</h3>
+                    <p>Một con sông nhỏ tên Duden chảy qua nơi đây và cung cấp những điều cần thiết.</p>
+                </div>
+            </div>
+            <!-- Item 4 -->
+            <div class="col-md-2 d-flex justify-content-center align-items-center ftco-animate mb-4">
+                <div class="service-item text-center">
+                    <div class="icon">
+                        <span class="flaticon-first"></span>
+                    </div>
+                    <h3>Điều Hòa Không Khí</h3>
+                    <p>Một con sông nhỏ tên Duden chảy qua nơi đây và cung cấp những điều cần thiết.</p>
+                </div>
+            </div>
+            <!-- Item 5 -->
+            <div class="col-md-2 d-flex justify-content-center align-items-center ftco-animate mb-4">
+                <div class="service-item text-center">
+                    <div class="icon">
+                        <span class="flaticon-hotel"></span>
+                    </div>
+                    <h3>Dịch Vụ Phòng</h3>
+                    <p>Một con sông nhỏ tên Duden chảy qua nơi đây và cung cấp những điều cần thiết.</p>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</footer>
+

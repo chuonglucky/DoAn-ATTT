@@ -1,0 +1,159 @@
+﻿﻿/* General styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+/* Container */
+.container {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* Rooms section styling */
+.rooms-section {
+    padding: 80px 0;
+    background-color: #f9f9f9;
+}
+
+.room-item {
+    position: relative;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin-bottom: 30px;
+    transition: transform 0.3s ease-in-out;
+}
+
+    .room-item:hover {
+        transform: translateY(-10px);
+    }
+
+    .room-item img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .room-item .ri-text {
+        padding: 20px;
+    }
+
+        .room-item .ri-text h4 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .room-item .ri-text h3 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+            .room-item .ri-text h3 span {
+                font-size: 16px;
+                color: #888;
+                margin-left: 5px;
+            }
+
+    .room-item table {
+        width: 100%;
+        margin-bottom: 20px;
+        border-collapse: collapse;
+    }
+
+        .room-item table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+            .room-item table td.r-o {
+                font-weight: bold;
+                color: #555;
+            }
+
+    .room-item a.primary-btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #ff6f61;
+        color: #fff;
+        font-size: 14px;
+        text-transform: uppercase;
+        text-decoration: none;
+        border-radius: 30px;
+        margin-top: 10px;
+        transition: background-color 0.3s ease;
+    }
+
+        .room-item a.primary-btn:hover {
+            background-color: #e55a4e;
+        }
+    .room-item img {
+        width: 100%; /* Giữ ảnh có chiều rộng bằng 100% của phần tử cha */
+        height: 200px; /* Cố định chiều cao */
+        object-fit: cover; /* Đảm bảo ảnh giữ tỷ lệ khung hình mà không bị méo */
+    }
+/* Căn giữa các nút phân trang */
+.MenuTrang {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px; /* Thêm khoảng cách phía trên */
+}
+
+    /* Kiểu cho các nút phân trang */
+    .MenuTrang .pagination {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+        /* Kiểu cho mỗi trang */
+        .MenuTrang .pagination li {
+            margin: 0 5px;
+        }
+
+        /* Kiểu cho các nút phân trang */
+        .MenuTrang .pagination a,
+        .MenuTrang .pagination span {
+            padding: 10px 20px;
+            background-color: #f8f9fa; /* Màu nền */
+            color: #007bff; /* Màu chữ xanh */
+            border: 1px solid #ccc; /* Đường viền */
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+            /* Hiệu ứng hover khi di chuột */
+            .MenuTrang .pagination a:hover,
+            .MenuTrang .pagination span:hover {
+                background-color: #007bff; /* Nền khi hover */
+                color: #fff; /* Chữ khi hover */
+            }
+
+        /* Kiểu cho nút phân trang hiện tại (active) */
+        .MenuTrang .pagination .active a {
+            background-color: #007bff; /* Nền xanh khi active */
+            color: #fff; /* Chữ trắng khi active */
+        }
+
+        /* Kiểu cho nút phân trang bị vô hiệu hóa */
+        .MenuTrang .pagination .disabled {
+            color: #ddd; /* Màu chữ nhạt cho nút vô hiệu hóa */
+            cursor: not-allowed;
+        }
+h2 {
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+}
+
+/*Filter*/

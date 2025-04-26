@@ -1,0 +1,67 @@
+﻿@model IEnumerable<WebApplication1.Models.TRANGTIN>
+<ul class="custom-navbar d-flex justify-content-center">
+    <li class="nav-item">
+        <a href="@Url.Action("Index", "TrangChu")" id="li-0" class="nav-link">Trang Chủ</a>
+    </li>
+    <li class="nav-item">
+        <a href="@Url.Action("DanhSachPhong", "Phong")" id="li-1" class="nav-link">Phòng</a>
+    </li>
+    <li class="nav-item">
+        <a href="@Url.Action("DSDichVu", "DichVu")" id="li-2" class="nav-link">Dịch vụ</a>
+    </li>
+    
+    <li class="nav-item">
+        <a href="@Url.Action("GuiLienHe", "LienHe")" id="contact" class="nav-link" onclick="setActive(this)">Liên Hệ</a>
+    </li>
+    @if (Model != null)
+    {
+        foreach (var item in Model)
+        {
+            <li class="nav-item">
+                <a href="@Url.Action("TrangTin", "TrangChu", new { metaTitle = item.MetaTitle })" id="li-@item.MetaTitle" class="nav-link">
+                @item.TenTrang
+                </a>
+            </li>
+
+        }
+    }
+
+
+
+
+            <li class="nav-item dropdown">
+                @if (Session["User"] == null)
+                {
+                    <a href="#" id="user" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" onclick="setActive(this)">
+                        Người dùng
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="user">
+                        <li><a class="dropdown-item" href="@Url.Action("DangNhap", "User")">Đăng Nhập</a></li>
+                        <li><a class="dropdown-item" href="@Url.Action("DangKy", "User")">Đăng Ký</a></li>
+
+                    </ul>
+
+
+                    <!-- Hiển thị khi người dùng chưa đăng nhập -->
+                }
+                else
+                {
+                    <a href="#" id="user li-5" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" onclick="setActive(this)">
+                        @(((WebApplication1.Models.KHACHHANG)Session["User"]).HoTen)
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="user">
+                        <li><a class="dropdown-item" href="@Url.Action("ThongTinCaNhan", "User")">Thông tin cá nhân</a></li>
+                        <li><a class="dropdown-item" href="@Url.Action("LichSuDatPhong", "User")">Lịch sử đặt phòng</a></li>
+                        <li><a class="dropdown-item" href="@Url.Action("ThayDoiMatKhau", "User")">Đổi mật khẩu</a></li>
+                        <li><a class="dropdown-item" href="@Url.Action("DangXuat", "User")">Đăng xuất</a></li>
+                    </ul>
+                }
+            </li>
+
+        </ul>
+
+<script>
+    // Tự động thêm class "active" cho menu item khi có giá trị trong ViewBag.DiaChi
+    var li = document.getElementById('li-@ViewBag.DiaChi');
+    li.classList.add('active');
+</script>

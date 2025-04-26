@@ -1,0 +1,19 @@
+﻿@model WebApplication1.Models.LOAIPHONG
+
+@{
+    ViewBag.Title = "Xác nhận Xóa LoaiPhong";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>Xác nhận Xóa Loại Phòng</h2>
+
+<p>Bạn có chắc chắn muốn xóa loại phòng <strong>@Model.TenLoai</strong>?</p>
+
+@using (Html.BeginForm("Delete", "QL_LoaiPhong", FormMethod.Post))
+{
+    @Html.HiddenFor(model => model.MaLoai)
+<div class="modal-footer">
+    <button type="submit" class="btn btn-danger">Xóa</button>
+    <a href="@Url.Action("DanhSachLoaiPhong", "QL_LoaiPhong")" class="btn btn-secondary">Đóng</a>
+</div>
+}

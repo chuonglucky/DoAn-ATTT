@@ -1,0 +1,122 @@
+﻿
+@{
+    ViewBag.Title = "DSDichVu";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@model IEnumerable<WebApplication1.Models.DICHVU>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Mã DV</th>
+            <th>Tên DV</th>
+            <th>Mô tả</th>
+            <th>Giá</th>
+            <th>Ảnh Dịch Vụ</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.MaDV</td>
+                <td>@item.TenDV</td>
+                <td>@item.Mota</td>
+                <td>@item.Gia</td>
+                <td><img src="@item.AnhDichVu" alt="Ảnh" style="width:100px;" /></td>
+                <td>
+                    <a href="@Url.Action("SuaDichVu", new { id = item.MaDV })" class="btn btn-primary">Sửa</a>
+                    <a href="@Url.Action("XoaDichVu", new { id = item.MaDV })" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn xóa không?')">Xóa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<a href="@Url.Action("ThemDichVu")" class="btn btn-success">Thêm Dịch Vụ</a>
+
+
+<style>
+    /* Table Styling */
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-family: 'Arial', sans-serif;
+    }
+
+        .table th, .table td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        .table th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
+
+        .table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .table tbody tr:hover {
+            background-color: #e9ecef;
+            cursor: pointer;
+        }
+
+        /* Image Styling */
+        .table img {
+            width: 100px;
+            height: auto;
+            border-radius: 5px;
+        }
+
+    /* Button Styling */
+    .btn {
+        padding: 8px 15px;
+        font-size: 14px;
+        text-decoration: none;
+        border-radius: 4px;
+        margin: 5px 0;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+        border: none;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+    }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+    .btn-success {
+        background-color: #28a745;
+        color: white;
+        border: none;
+    }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+    /* Add some space between the table and the "Add Service" button */
+    a.btn-success {
+        display: inline-block;
+        margin-top: 20px;
+        text-align: center;
+    }
+
+</style>

@@ -1,0 +1,24 @@
+﻿@model WebApplication1.Models.LOAIPHONG
+
+@{
+    ViewBag.Title = "Edit LoaiPhong";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>Edit LoaiPhong</h2>
+
+@using (Html.BeginForm("Edit", "QL_LoaiPhong", FormMethod.Post))
+{
+    @Html.HiddenFor(model => model.MaLoai)
+
+    <div class="mb-3">
+        <label for="TenLoai" class="form-label">Tên Loại</label>
+        @Html.TextBoxFor(model => model.TenLoai, new { @class = "form-control", id = "TenLoai" })
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Lưu</button>
+
+        <a href="@Url.Action("DanhSachLoaiPhong", "QL_LoaiPhong")" class="btn btn-secondary">Đóng</a>
+    </div>
+}

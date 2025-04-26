@@ -1,0 +1,194 @@
+﻿@{
+    ViewBag.Title = "Đặt Phòng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    // Lấy thông tin từ ViewBag
+    var cus = (WebApplication1.Models.KHACHHANG)Session["User"];
+    var phong = ViewBag.Phong as WebApplication1.Models.PHONG;
+    var dichVuList = ViewBag.DichVuList as List<WebApplication1.Models.DICHVU>;
+}
+
+<section class="room-details-section spad">
+    <div class="container">
+        <h2>Đặt Phòng @(phong?.SoPH)</h2>
+
+        <!-- Hiển thị thông báo lỗi nếu có -->
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger">
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <p>@error.ErrorMessage</p>
+                }
+            </div>
+        }
+
+        <!-- Kiểm tra người dùng -->
+        @if (cus == null)
+        {
+            <p>Bạn phải <a href="@Url.Action("DangNhap", "User")">đăng nhập</a> để tiếp tục đặt phòng.</p>
+        }
+        else if (phong == null)
+        {
+            <p>Không tìm thấy thông tin phòng. Vui lòng quay lại và thử lại.</p>
+        }
+        else
+        {
+            <!-- Form đặt phòng -->
+            using (Html.BeginForm("DatPhong", "DatPhong", FormMethod.Post))
+            {
+                @Html.Hidden("MaPH", phong.MaPH)
+
+                <div class="form-group">
+                    @Html.Label("Ngày Đặt")
+                    @Html.Label("NgayDat", DateTime.Now.ToString("yyyy-MM-dd"), new { @class = "form-control", type = "date", required = "required" })
+                </div>
+
+
+                <div class="form-group">
+                    @Html.Label("Ngày Nhận")
+                    @Html.TextBox("NgayNhan", "", new { @class = "form-control", type = "date", required = "required" })
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("Ngày Trả")
+                    @Html.TextBox("NgayTra", "", new { @class = "form-control", type = "date", required = "required" })
+                </div>
+
+
+                <div class="form-group">
+                    @Html.Label("Dịch Vụ (Có thể chọn nhiều)")
+                    <div class="service-container">
+                        @if (dichVuList != null && dichVuList.Any())
+                        {
+                            foreach (var dichVu in dichVuList)
+                            {
+                                <div>
+                                    <input type="checkbox" name="selectedServices" value="@dichVu.MaDV" id="dichvu_@dichVu.MaDV" />
+                                    @dichVu.TenDV
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <p class="text-warning">Hiện không có dịch vụ nào để chọn. Bạn có thể tiếp tục đặt phòng mà không cần chọn dịch vụ.</p>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("Phương Thức Thanh Toán")
+                    <div>
+                        <input type="radio" id="vivnpay" name="thanhtoan" value="vivnpay" /> VNPay
+                        <input type="radio" id="vimomo" name="thanhtoan" value="vimomo" /> MoMo
+                    </div>
+                </div>
+
+                <div class="center-button">
+                    <button type="submit" class="btn btn-primary">Đặt phòng</button>
+                </div>
+            }
+        }
+    </div>
+</section>
+
+<style>
+    /* Title */
+    .room-details-section h2 {
+        font-size: 2.5rem;
+        color: #333;
+        text-align: center;
+        margin-bottom: 30px;
+        font-family: 'Roboto', sans-serif;
+        font-weight: bold;
+        text-transform: uppercase; /* Adds emphasis */
+        letter-spacing: 1px;
+    }
+
+    /* Form elements */
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+        .form-group label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+    /* Button styles */
+    button.btn-primary {
+        background-color: #ff6a00;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        width: 250px;
+        border: solid 2px c;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+        button.btn-primary:hover {
+            background-color: #f39c12;
+            transform: translateY(-3px); /* Slight lift effect on hover */
+        }
+
+        /* Button focus effect */
+        button.btn-primary:focus {
+            outline: none;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.6); /* Blue focus ring */
+        }
+
+    /* Error messages */
+    .alert-danger {
+        color: #fff;
+        background-color: #e74c3c;
+        border: none;
+        padding: 20px;
+        text-align: center;
+        margin-bottom: 25px;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1); /* Slight shadow for alert box */
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .container {
+            padding: 20px;
+        }
+
+        .room-details-section h2 {
+            font-size: 2rem;
+        }
+
+        .form-group label {
+            font-size: 1rem;
+        }
+
+        button.btn-primary {
+            font-size: 1rem;
+        }
+    }
+
+    .service-container {
+        display: grid;
+        grid-template-columns: repeat(10, 1fr); /* 3 cột */
+    }
+
+    select {
+        grid-column: span 3; /* Chiếm hết chiều rộng của lưới */
+        width: 100%;
+    }
+
+    /*button*/
+    .center-button {
+        display: flex;
+        justify-content: center;
+    }
+</style>

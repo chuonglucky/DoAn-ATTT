@@ -1,0 +1,475 @@
+﻿
+@{
+    ViewBag.Title = "Trang chủ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using PagedList.Mvc;
+
+<div>
+    <link rel="stylesheet" href="~/StyleCSS/TrangChu.css" />
+
+
+    <section id="discountSection" class="my-5 py-4">
+        <h2 class="mt-4 title-ud">Ưu đãi Black Friday</h2>
+        <p class="intro-text">Chúng tôi mang đến cho bạn những ưu đãi vô cùng hấp dẫn, không thể bỏ qua. Đặt phòng ngay hôm nay để tận hưởng các mức giá tốt nhất và nhiều phần quà đặc biệt.</p>
+
+        <!-- Carousel Section -->
+        <div id="discountCarousel" class="carousel slide my-4" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <!-- Slide 1 -->
+                <div class="carousel-item active">
+                    <a href="@Url.Action("ChitietUuDai", "UuDai")" class="d-flex align-items-center text-decoration-none">
+                        <div class="w-50 text-start pe-4">
+                            <h5 class="large-title">Giảm giá đặc biệt lên đến 30%</h5>
+                            <p class="large-text">Đặt phòng trước 30 ngày để nhận ưu đãi lên đến 30%. Đây là cơ hội tuyệt vời để bạn lên kế hoạch cho kỳ nghỉ hoàn hảo với giá ưu đãi nhất.</p>
+                            <p class="details-text">Ưu đãi này áp dụng cho tất cả các loại phòng từ đơn giản đến cao cấp. Đừng bỏ lỡ cơ hội này để tiết kiệm chi phí cho chuyến đi của bạn!</p>
+                            <p class="call-to-action">Nhanh tay đặt phòng để nhận ngay ưu đãi!</p>
+                        </div>
+                        <img src="~/Images/Sale1.jpg" class="d-block w-50 ms-auto" alt="Discount 1">
+                    </a>
+                </div>
+                <!-- Slide 2 -->
+                <div class="carousel-item">
+                    <a href="@Url.Action("ChitietUuDai", "UuDai")" class="d-flex align-items-center text-decoration-none">
+                        <div class="w-50 text-start pe-4">
+                            <h5 class="large-title">Khuyến mãi cuối tuần</h5>
+                            <p class="large-text">Đặt phòng cuối tuần nhận ngay ưu đãi giảm giá lên đến 20%. Chuyến đi cuối tuần thật tuyệt vời với mức giá cực hấp dẫn!</p>
+                        </div>
+                        <img src="~/Images/Sale2.jpg" class="d-block w-50 ms-auto" alt="Discount 2">
+                    </a>
+                </div>
+                <!-- Slide 3 -->
+                <div class="carousel-item">
+                    <a href="@Url.Action("ChitietUuDai", "UuDai")" class="d-flex align-items-center text-decoration-none">
+                        <div class="w-50 text-start pe-4">
+                            <h5 class="large-title">Ưu đãi đặc biệt cho nhóm</h5>
+                            <p class="large-text">Nếu bạn đặt phòng cho nhóm từ 4 người trở lên, bạn sẽ nhận được ưu đãi đặc biệt. Liên hệ để biết thêm chi tiết.</p>
+                        </div>
+                        <img src="~/Images/Sale3.jpg" class="d-block w-50 ms-auto" alt="Discount 3">
+                    </a>
+                </div>
+            </div>
+
+            <!-- Carousel Controls -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#discountCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#discountCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- Phần PHÒNG YÊU THÍCH -->
+    <section id="favoriteRoomSection" class="my-5 py-4">
+        <h3 class="section-title bold-title">Phòng yêu thích</h3>
+        <p class="section-subtitle">Những phòng được khách hàng đánh giá cao</p>
+        <div class="room-container">
+            @foreach (var room in Model)
+            {
+                <a href="@Url.Action("ChiTietPhong", "Phong", new { id = room.maphong })" class="phong">
+                    <div class="room-item">
+                        <img src="~/Images/Sliders/@room.anh" alt="Room Image" />
+                        <div class="room-info">
+                            <h4>Phòng @room.Name</h4>
+                            <div class="danhgia">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    if (i <= Math.Floor(@room.rating))
+                                    {
+                                        <span class="star active"><i class="fas fa-star"></i></span>
+                                    }
+                                    else if (i == Math.Ceiling(@room.rating) && @room.rating % 1 != 0)
+                                    {
+                                        <span class="star active"><i class="fas fa-star-half-alt"></i></span>
+                                    }
+                                    else
+                                    {
+                                        <span class="star"><i class="fas fa-star"></i></span>
+                                    }
+                                }
+                            </div>
+                            <p>(@Math.Round(@room.rating, 1) - @room.cnt người đánh giá)</p>
+
+                            <p><strong>Giá: </strong>@room.gia.ToString("#,0") VND </p>
+                        </div>
+                    </div>
+                </a>
+                
+            }
+        </div>
+        <!-- Grid Section -->
+        <!--<div class="grid" id="favoriteRoomContainer">-->
+            <!-- Nội dung sẽ được sinh động -->
+        <!--</div>-->
+    </section>
+
+    <section class="ftco-intro" style="background-image: url('/Images/phong-don-1.jpg');" data-stellar-background-ratio="0.5">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-9 text-center">
+                    <h2>Sẵn sàng để bắt đầu</h2>
+                    <p class="mb-4">Việc đặt phòng trực tuyến với chúng tôi là hoàn toàn an toàn! Đặt chỗ nghỉ mơ ước của bạn chỉ trong vài cú click, hoặc liên hệ với chúng tôi nếu bạn có bất kỳ câu hỏi nào.</p>
+                    <p class="mb-0">
+                        <a href="@Url.Action("DanhSachPhong", "Phong")" class="btn btn-primary px-4 py-3">Đặt ngay</a>
+                        <a href="#" class="btn btn-white px-4 py-3">Liên hệ với chúng tôi</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="ftco-section bg-light">
+        <div class="container">
+            <div class="row no-gutters">
+                <div class="col-md-6 wrap-about">
+                    <!-- Replace background image if needed -->
+                    <div class="img img-2 mb-4" style="background-image: url('/Images/Offer/Offer0.jpg');"></div>
+                    <h2>Chỗ nghỉ được khuyên dùng nhất tại Vũng Tàu</h2>
+                    <p>Vũng Tàu, thành phố biển xinh đẹp với bãi biển dài và cát trắng mịn màng, là điểm đến lý tưởng cho những ai yêu thích sự yên bình và thư giãn. Nơi đây không chỉ nổi tiếng với cảnh biển tuyệt đẹp mà còn với những món hải sản tươi ngon, làm say lòng du khách. Vũng Tàu là nơi bạn có thể tận hưởng không khí trong lành, khám phá các địa điểm du lịch nổi tiếng như Mũi Nghinh Phong, Tượng Chúa Kitô, và các bãi biển xanh ngắt. Với khí hậu ôn hòa và những dịch vụ tuyệt vời, Vũng Tàu chắc chắn sẽ mang đến cho bạn một kỳ nghỉ tuyệt vời và đầy ấn tượng.</p>
+                </div>
+                <div class="col-md-6 wrap-about ftco-animate">
+                    <div class="heading-section">
+                        <div class="pl-md-5">
+                            <h2 class="mb-2">Chúng tôi cung cấp</h2>
+                        </div>
+                    </div>
+                    <div class="pl-md-5">
+                        <p>Chúng tôi cung cấp những tiện nghi và dịch vụ tuyệt vời để bạn có một kỳ nghỉ thoải mái và thư giãn nhất. Dưới đây là một số dịch vụ mà chúng tôi mang lại:</p>
+                        <div class="row">
+                            <div class="services-2 col-lg-6 d-flex w-100">
+                                <div class="icon d-flex justify-content-center align-items-center">
+                                    <img src="~/Images/Offer/Tra.jpg" alt="Trà và Cà Phê">
+                                </div>
+                                <div class="media-body pl-3">
+                                    <h3 class="heading">Trà và Cà Phê</h3>
+                                    <p>Thưởng thức những tách trà và cà phê thơm ngon, giúp bạn thư giãn trong không gian ấm cúng của chúng tôi.</p>
+                                </div>
+                            </div>
+                            <div class="services-2 col-lg-6 d-flex w-100">
+                                <div class="icon d-flex justify-content-center align-items-center">
+                                    <img src="~/Images/Offer/PhongTam.jpg" alt="Phòng Tắm Nóng">
+                                </div>
+                                <div class="media-body pl-3">
+                                    <h3 class="heading">Phòng Tắm Nóng</h3>
+                                    <p>Thư giãn và chăm sóc bản thân trong phòng tắm nóng, giúp bạn cảm thấy sảng khoái và thư giãn sau một ngày dài.</p>
+                                </div>
+                            </div>
+                            <div class="services-2 col-lg-6 d-flex w-100">
+                                <div class="icon d-flex justify-content-center align-items-center">
+                                    <img src="~/Images/Offer/Beboi.jpg" alt="Bể Bơi">
+                                </div>
+                                <div class="media-body pl-3">
+                                    <h3 class="heading">Bể Bơi</h3>
+                                    <p>Thư giãn và tận hưởng những phút giây tuyệt vời tại bể bơi rộng rãi của chúng tôi.</p>
+                                </div>
+                            </div>
+                            <div class="services-2 col-lg-6 d-flex w-100">
+                                <div class="icon d-flex justify-content-center align-items-center">
+                                    <img src="~/Images/Offer/Gym.jpg" alt="Phòng Gym">
+                                </div>
+                                <div class="media-body pl-3">
+                                    <h3 class="heading">Phòng Gym</h3>
+                                    <p>Hãy duy trì sức khỏe của bạn với các trang thiết bị hiện đại trong phòng gym của chúng tôi.</p>
+                                </div>
+                            </div>
+                            <div class="services-2 col-lg-6 d-flex w-100">
+                                <div class="icon d-flex justify-content-center align-items-center">
+                                    <img src="~/Images/Offer/nhahang.jpg" alt="Nhà Hàng">
+                                </div>
+                                <div class="media-body pl-3">
+                                    <h3 class="heading">Nhà Hàng</h3>
+                                    <p>Thưởng thức những món ăn ngon và phong phú trong nhà hàng của chúng tôi với các đầu bếp tài ba.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="planSection" class="my-5 py-4">
+        <h3 class="section-title bold-title">Lên kế hoạch dễ dàng và nhanh chóng</h3>
+        <p class="section-subtitle">Khám phá các điểm đến hàng đầu theo cách bạn thích</p>
+
+        <!-- Tabs -->
+        <div class="plan-tabs">
+            <button class="tab active" data-category="beach">Bãi biển</button>
+            <button class="tab" data-category="nature">Thiên nhiên</button>
+            <button class="tab" data-category="city">Địa danh</button>
+        </div>
+
+        <!-- Grid Section -->
+        <div class="grid" id="gridContainer">
+            <!-- Dynamic content will be populated here -->
+        </div>
+    </section>
+
+</div>
+<style>
+    .room-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .room-item {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.3s ease-in-out;
+    }
+
+        .room-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .room-item img {
+            width: 100%;
+            height: 180px; /* Fixed height for images */
+            object-fit: cover; /* Make sure the image covers the area */
+            border-bottom: 2px solid #f1f1f1; /* Add a border between the image and text */
+        }
+
+    .room-info {
+        padding: 15px;
+        text-align: center;
+    }
+
+        .room-info h4 {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #333;
+        }
+
+        .room-info p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #555;
+        }
+
+            .room-info p strong {
+                color: #000;
+            }
+    .danhgia {
+        display: inline-flex;
+        gap: 5px;
+    }
+
+    .star {
+        font-size: 20px;
+        color: #ccc; /* Gray color for inactive stars */
+        transition: color 0.3s ease-in-out;
+    }
+
+        .star.active {
+            color: #f39c12; /* Yellow color for active stars */
+        }
+
+        .star i {
+            transition: color 0.3s ease-in-out;
+        }
+
+        .star.active i {
+            color: #f39c12; /* Highlight the filled stars in yellow */
+        }
+        
+        .phong:hover {
+            text-decoration: none;
+        }
+</style>
+<script>
+    const plansData = {
+        beach: [
+            {
+                title: "Hòn Bà Vũng Tàu",
+                distance: "Một địa danh nổi tiếng với vẻ đẹp thiên nhiên hoang sơ, nước biển trong xanh và khung cảnh yên bình.",
+                image: "/Images/Places/Honba.png"
+            },
+            {
+                title: "Bãi sau Vũng Tàu",
+                distance: "Bãi biển dài và sạch với cát trắng mịn, lý tưởng để tắm biển và thư giãn.",
+                image: "/Images/Places/Baisau.jpg"
+            },
+            {
+                title: "Bến thuyền Marina",
+                distance: "Địa điểm lãng mạn với bến thuyền độc đáo, là nơi chụp ảnh lý tưởng khi hoàng hôn buông xuống.",
+                image: "/Images/Places/Benthuyen.jpg"
+            }
+        ],
+        nature: [
+            {
+                title: "Rừng quốc gia Bình Châu",
+                distance: "Một khu rừng nguyên sinh với hệ sinh thái phong phú, lý tưởng cho các chuyến trekking và khám phá thiên nhiên.",
+                image: "/Images/Places/Rungquocgia.jpg"
+            },
+            {
+                title: "Hồ đá xanh",
+                distance: "Hồ nước xanh biếc nằm giữa núi non hùng vĩ, là điểm đến thư giãn và chụp ảnh tuyệt đẹp.",
+                image: "/Images/Places/Hodaxanh.jpg"
+            },
+            {
+                title: "Hồ Cốc",
+                distance: "Khu du lịch thiên nhiên với biển xanh, bãi cát trắng và rừng dương bạt ngàn.",
+                image: "/Images/Places/Hococ.jpg"
+            },
+            {
+                title: "Hồ Mây",
+                distance: "Khu du lịch sinh thái và vui chơi giải trí trên núi cao, nổi tiếng với cảnh quan hùng vĩ.",
+                image: "/Images/Places/Homay.png"
+            },
+            {
+                title: "Hồ Tràm",
+                distance: "Địa điểm du lịch lý tưởng với biển xanh, resort sang trọng và không gian yên bình.",
+                image: "/Images/Places/Hotram.jpg"
+            }
+        ],
+        city: [
+            {
+                title: "Hẽm 444 Trần Phú",
+                distance: "Một con hẻm nhỏ với view hướng biển tuyệt đẹp, là nơi được giới trẻ yêu thích để check-in.",
+                image: "/Images/Places/Hem444.jpg"
+            },
+            {
+                title: "Bạch Dinh",
+                distance: "Biệt thự cổ kính thời Pháp, mang nét kiến trúc độc đáo và lịch sử lâu đời.",
+                image: "/Images/Places/Bachdinh.jpg"
+            },
+            {
+                title: "Đồi Con Heo",
+                distance: "Địa điểm cắm trại và ngắm cảnh lý tưởng với không gian thoáng đãng và view thành phố từ trên cao.",
+                image: "/Images/Places/Doicoheo.jpg"
+            },
+            {
+                title: "Nhà úp ngược Vũng Tàu",
+                distance: "Ngôi nhà độc đáo với thiết kế ngược, tạo nên trải nghiệm thú vị và những bức ảnh ấn tượng.",
+                image: "/Images/Places/Nhaupnguoc.jpg"
+            },
+            {
+                title: "Khu suối khoáng",
+                distance: "Nơi thư giãn với các dịch vụ tắm suối khoáng nóng và spa, giúp tái tạo năng lượng.",
+                image: "/Images/Places/Suoikhoang.jpg"
+            },
+            {
+                title: "Công viên giải trí Hồ Tràm",
+                distance: "Khu vui chơi giải trí hiện đại với nhiều hoạt động phù hợp cho gia đình và trẻ nhỏ.",
+                image: "/Images/Places/Congvien.jpg"
+            }
+        ]
+    };
+
+
+
+    // Function to generate grid items dynamically
+    function generateGrid(category) {
+        const gridContainer = document.getElementById('gridContainer');
+        gridContainer.innerHTML = '';  // Clear existing content
+
+        const data = plansData[category];
+
+        data.forEach(item => {
+            const gridItem = document.createElement('div');
+            gridItem.classList.add('grid-item');
+            gridItem.innerHTML = `
+            <img src="${item.image}" alt="${item.title}" />
+            <h3>${item.title}</h3>
+            <p>${item.distance}</p>
+        `;
+            gridContainer.appendChild(gridItem);
+        });
+    }
+
+    // Event listeners for tabs
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', function () {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            tab.classList.add('active');
+            const category = tab.getAttribute('data-category');
+            generateGrid(category);
+        });
+    });
+
+    // Initial load (default to beach)
+    generateGrid('beach');
+
+
+    // Dữ liệu giả lập cho phòng yêu thích (rating tạm thời bằng 0)
+    const favoriteRooms = [
+        {
+            title: "Phòng Đơn",
+            rating: 0, // Tạm thời bằng 0
+            reviews: "0 đánh giá",
+            price: "1.500.000 VND",
+            image: "/Images/Rooms/Phongdon.jpg"
+        },
+        {
+            title: "Phòng Đôi",
+            rating: 0,
+            reviews: "0 đánh giá",
+            price: "2.800.000 VND",
+            image: "/Images/Rooms/Phongdoi.jpg"
+        },
+        {
+            title: "Phòng VIP",
+            rating: 0,
+            reviews: "0 đánh giá",
+            price: "4.500.000 VND",
+            image: "/Images/Rooms/Phongvip.jpg"
+        },
+        {
+            title: "Phòng Có View Biển",
+            rating: 0,
+            reviews: "0 đánh giá",
+            price: "3.000.000 VND",
+            image: "/Images/Rooms/Phongviewbien.jpg"
+        }
+    ];
+
+    // Hàm tạo các ngôi sao đánh giá
+    function renderStars(rating) {
+        const maxStars = 5;
+        const filledStars = Math.round(rating); // Làm tròn số sao
+        let starsHTML = '';
+
+        for (let i = 1; i <= maxStars; i++) {
+            if (i <= filledStars) {
+                starsHTML += '<span style="color: gold;">&#9733;</span>'; // Sao vàng (đã đánh giá)
+            } else {
+                starsHTML += '<span style="color: lightgray;">&#9734;</span>'; // Sao xám (chưa đánh giá)
+            }
+        }
+        return starsHTML;
+    }
+
+    // Hàm hiển thị danh sách phòng yêu thích
+    function generateFavoriteRooms() {
+        const favoriteRoomContainer = document.getElementById('favoriteRoomContainer');
+        favoriteRoomContainer.innerHTML = ''; // Xóa nội dung cũ
+
+        favoriteRooms.forEach(room => {
+            const roomItem = document.createElement('div');
+            roomItem.classList.add('grid-item');
+            roomItem.innerHTML = `
+            <img src="${room.image}" alt="${room.title}" />
+            <h3>${room.title}</h3>
+            <p><strong>Đánh giá:</strong> ${renderStars(room.rating)} (${room.rating}/5 - ${room.reviews})</p>
+            <p><strong>Giá:</strong> ${room.price}</p>
+        `;
+            favoriteRoomContainer.appendChild(roomItem);
+        });
+    }
+
+    // Gọi hàm khi trang được tải
+    generateFavoriteRooms();
+
+</script>
+

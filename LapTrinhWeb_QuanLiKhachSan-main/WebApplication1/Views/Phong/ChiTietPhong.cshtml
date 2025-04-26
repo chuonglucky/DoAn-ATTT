@@ -1,0 +1,274 @@
+﻿@{
+    ViewBag.Title = "Chi Tiết Phòng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var cus = (WebApplication1.Models.KHACHHANG)Session["User"];
+    var dichVuList = ViewBag.DichVuList as List<WebApplication1.Models.DICHVU>;
+}
+@model WebApplication1.Models.PHONG
+<link rel="stylesheet" href="~/StyleCSS/ChiTietPhong.css" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Thư viện jQuery UI -->
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
+<section class="room-details-section spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="room-details-item">
+                    <img src="~/Images/Sliders/@Model.Anh" alt="">
+                    <div class="rd-text">
+                        <div class="rd-title">
+                            <h3>Phòng @Model.SoPH</h3>
+
+
+                            <a href="@Url.Action("DatPhong", "DatPhong", new { MaPH = Model.MaPH })" class="booking-now-btn">Booking Now</a>
+                        </div>
+                        <div class="danhgia">
+                            <span data-value="1"><i class="fas fa-star"></i></span>
+                            <span data-value="2"><i class="fas fa-star"></i></span>
+                            <span data-value="3"><i class="fas fa-star"></i></span>
+                            <span data-value="4"><i class="fas fa-star"></i></span>
+                            <span data-value="5"><i class="fas fa-star"></i></span>
+                        </div>
+
+                        <p class="ratingtext"> (@(Math.Round(ViewBag.Avg, 1)) / 5.0)</p>
+                        <h2>@(Model.Gia.HasValue ? Model.Gia.Value.ToString("#,0") : "0") VND <span>/Pernight</span></h2>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td class="r-o">Diện tích:</td>
+                                    <td>@Model.DienTich m<sup>2</sup></td>
+                                </tr>
+                                <tr>
+                                    <td class="r-o">Nội thất:</td>
+                                    <td>@Model.NoiThat</td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                        <p class="f-para">
+                            @if (string.IsNullOrEmpty(Model.Mota?.Trim()))
+                            {
+                            <p> </p>
+                        }
+                        else
+                        {
+                            @Html.Raw(Model.Mota.ToString().Replace("\n", "</p><p>&nbsp&nbsp&nbsp&nbsp&nbsp"))
+                        }
+                            </p>
+                        </div>
+                </div>
+                <!-- Phần đánh giá -->
+                <div class="rd-reviews">
+                    <h4>Reviews</h4>
+                    @foreach (var binhLuan in ViewBag.BinhLuans as List<WebApplication1.Models.CMMD>)
+                    {
+                        <div class="comment">
+                            <p><strong> @binhLuan.HoTenKhachHang:</strong></p>
+                            <p>@binhLuan.NoiDung</p>
+                            <small>Đánh giá: @binhLuan.DanhGia sao | Thời gian: @binhLuan.ThoiGian</small>
+                            <hr />
+                        </div>
+                    }
+                </div>
+                <div class="review-add">
+                    <h4>Add Review</h4>
+                    @if (cus != null)
+                    {
+                        using (Html.BeginForm("ThemBinhLuan", "Phong", FormMethod.Post))
+                        {
+                            @Html.HiddenFor(model => model.MaPH)
+                            <div class="form-group">
+                                @Html.Label("Nội dung")
+                                @Html.TextArea("NoiDung", new { @class = "form-control", rows = 4 })
+                            </div>
+                            <div class="form-group">
+                                @Html.Label("Đánh giá")
+                                <div class="rating" style="font-size: 30px; cursor: pointer;">
+                                    <span class="star" data-value="1"><i class="fas fa-star"></i></span>
+                                    <span class="star" data-value="2"><i class="fas fa-star"></i></span>
+                                    <span class="star" data-value="3"><i class="fas fa-star"></i></span>
+                                    <span class="star" data-value="4"><i class="fas fa-star"></i></span>
+                                    <span class="star" data-value="5"><i class="fas fa-star"></i></span>
+                                </div>
+                                @Html.Hidden("DanhGia", "1")
+                            </div>
+                            <button type="submit" class="btn btn-primary">Gửi bình luận</button>
+                        }
+                    }
+                    else
+                    {
+                        <p>Bạn phải <a href="@Url.Action("DangNhap", "User")">đăng nhập</a> để bình luận.</p>
+                    }
+                </div>
+            </div>
+
+            <!-- Cột bên phải -->
+            <div class="col-lg-4">
+                <!-- Phần đặt phòng -->
+                <div class="room-booking">
+                    <h3>Your Reservation</h3>
+                    <form id="reservation-form" action="#" method="POST">
+                        <div class="check-date">
+                            <label for="date-in">Check In:</label>
+                            <input type="text" class="date-input" id="date-in" name="check-in">
+                        </div>
+                        <div class="check-date">
+                            <label for="date-out">Check Out:</label>
+                            <input type="text" class="date-input" id="date-out" name="check-out">
+                        </div>
+                        <button type="submit" class="check">Check Availability</button>
+                    </form>
+                    <div id="availability-result"></div> <!-- Kết quả thông báo về tình trạng phòng -->
+                </div>
+
+                <!-- Phần danh sách dịch vụ -->
+                <div class="room-services">
+                    <h4>Danh Sách Dịch Vụ</h4>
+                    @if (dichVuList != null && dichVuList.Any())
+                    {
+                        foreach (var dichVu in dichVuList)
+                        {
+                            <div class="service-item">
+                                <h5 class="service-title">@dichVu.TenDV</h5>
+                                <p class="service-desc">
+                                    @if (string.IsNullOrEmpty(dichVu.Mota))
+                                    {
+                                        <text>Không có mô tả</text>
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw(dichVu.Mota.Length > 50 ? dichVu.Mota.Substring(0, 50) + "..." : dichVu.Mota)
+                                    }
+                                </p>
+                                <p class="service-price">Giá: @String.Format("{0:0,0} VND", dichVu.Gia)</p>
+                                <a href="@Url.Action("ChiTietDichVu", "DichVu", new { id = dichVu.MaDV })" class="btn btn-primary">Tìm hiểu</a>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p>Không có dịch vụ nào để hiển thị.</p>
+                    }
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    $(document).ready(function () {
+    // Kích hoạt Datepicker cho các trường ngày
+    $("#date-in, #date-out").datepicker({
+        dateFormat: 'yy-mm-dd',  // Định dạng ngày
+        minDate: 0,  // Ngày tối thiểu có thể chọn
+        autoclose: true,  // Đóng calendar tự động khi chọn ngày
+        onClose: function (selectedDate) {
+            // Đồng bộ check-out sau khi chọn check-ina
+            if (this.id == "date-in" && selectedDate !== "") {
+                var checkOutDate = $("#date-out").val();
+                if (checkOutDate && selectedDate > checkOutDate) {
+                    $("#date-out").val(selectedDate);
+                }
+            }
+        }
+    });
+
+    $("#reservation-form").submit(function (event) {
+        event.preventDefault(); 
+
+        // Lấy dữ liệu từ form
+        var checkIn = $("#date-in").val();
+        var checkOut = $("#date-out").val();
+        var maPH = "@Model.MaPH";  
+
+        // Kiểm tra nếu ngày chưa được chọn
+        if (!checkIn || !checkOut) {
+            $("#availability-result").html("<p class='error'>Vui lòng chọn ngày check-in và check-out.</p>");
+            return;
+        }
+
+        // Gửi yêu cầu Ajax
+        $.ajax({
+            url: "@Url.Action("CheckAvailability", "Phong")",  // URL action trong Controller
+            type: "POST",
+            data: {
+                MaPH: maPH,
+                CheckIn: checkIn,
+                CheckOut: checkOut
+            },
+            success: function (response) {
+                if (response.available) {
+                    $("#availability-result").html("<p class='success'>Phòng còn trống. Bạn có thể đặt phòng ngay.</p>");
+                } else {
+                    $("#availability-result").html("<p class='error'>" + response.message + "</p>");
+                }
+            },
+            error: function (xhr, status, error) {
+                $("#availability-result").html("<p class='error'>Có lỗi xảy ra. Vui lòng thử lại sau.</p>");
+            }
+        });
+    });
+    });
+    $(document).ready(function () {
+        let selectedRating = 0;  // luu  rating
+        // Xử lý khi click vào sao
+        $('.star').click(function () {
+            selectedRating = $(this).data('value');  // Lưu giá trị rating của sao đã chọn
+            updateStars(selectedRating);
+            $('#rating-value').text(selectedRating);  // Hiển thị giá trị rating đã chọn
+        });
+        // Cập nhật màu sắc sao khi hover
+        $('.star').mouseover(function () {
+            let rating = $(this).data('value');
+            updateStars(rating);
+        });
+        // Quay lại trạng thái ban đầu khi mouseout
+        $('.star').mouseout(function () {
+            updateStars(selectedRating);
+        });
+        function updateStars(rating) {
+            $('.star').each(function () {
+                if ($(this).data('value') <= rating) {
+                    $(this).css('color', 'gold');  // Sao vàng nếu đã được chọn
+                } else {
+                    $(this).css('color', 'grey');  // Sao xám nếu chưa được chọn
+                }
+            });
+        }
+    });
+    $(document).ready(function () {
+        $(".star").on("click", function () {
+            var ratingValue = $(this).data("value");
+            // Cập nhật giá trị trong input hidden
+            $("input[name='DanhGia']").val(ratingValue);
+            $(".star").each(function () {
+                if ($(this).data("value") <= ratingValue) {
+                    $(this).html('<i class="fas fa-star"></i>');  // Sao đã chọn
+                } else {
+                    $(this).html('<i class="far fa-star"></i>');  // Sao chưa chọn
+                }
+            });
+        });
+    });
+    var rating = @ViewBag.Avg;
+
+    var stars = document.querySelectorAll('.danhgia span');
+
+    stars.forEach(function (star, index) {
+        // Chuyển đổi sao thành chỉ số bắt đầu từ 1
+        var starValue = index + 1;
+
+        // Gán sao đầy đủ
+        if (starValue <= Math.floor(rating)) {
+            star.classList.add('full');
+        }
+        // Gán sao một phần
+        else if (starValue - 0.5 <= rating && starValue > rating) {
+            star.classList.add('half');
+        }
+    });
+</script>

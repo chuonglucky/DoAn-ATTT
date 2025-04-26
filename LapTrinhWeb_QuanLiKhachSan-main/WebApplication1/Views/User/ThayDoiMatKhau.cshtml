@@ -1,0 +1,179 @@
+﻿
+@{
+    ViewBag.Title = "ThayDoiMatKhau";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+}
+<style>
+    /* Đặt toàn bộ phần trang thay đổi mật khẩu vào một container để căn giữa */
+.change-password-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+    padding: 20px;
+}
+
+/* Container chính của form */
+.change-password-container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 450px;
+}
+
+/* Tiêu đề của form */
+.change-password-container h2 {
+    text-align: center;
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Các nhóm input */
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* Nhãn của các trường nhập liệu */
+.form-group label {
+    display: block;
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+/* Các trường nhập liệu */
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* Các trường nhập liệu khi focus */
+.form-group input:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+/* Các thông báo lỗi */
+.error {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* Các thông báo thành công */
+.success {
+    color: green;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* Nút submit */
+.nut {
+    text-align: center;
+}
+
+.btn-change-password {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+/* Hiệu ứng hover cho nút */
+.btn-change-password:hover {
+    background-color: #45a049;
+}
+
+/* Khi form có thông báo thành công hoặc lỗi */
+.nut span {
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+    font-size: 16px;
+}
+
+/* Điều chỉnh độ rộng của các input và button */
+@@media screen and (max-width: 768px) {
+    .change-password-container {
+        width: 100%;
+        padding: 20px;
+    }
+}
+
+</style>
+<div class="change-password-page">
+    <div class="change-password-container">
+        <h2>Thay đổi mật khẩu</h2>
+        <form method="post" action="/User/ThayDoiMatKhau">
+            <!-- Hiển thị thông báo lỗi cho mật khẩu cũ -->
+            @if (TempData["ErrOldPassword"] != null)
+            {
+                <span class="error">@TempData["ErrOldPassword"]</span>
+            }
+
+            <div class="form-group">
+                <label for="oldPassword">Mật khẩu cũ</label>
+                <input type="password" id="oldPassword" name="oldPassword" placeholder="Nhập mật khẩu cũ" required />
+            </div>
+
+            <!-- Hiển thị thông báo lỗi cho mật khẩu mới -->
+            @if (TempData["ErrPassword"] != null)
+            {
+                <span class="error">@TempData["ErrPassword"]</span>
+            }
+
+            <div class="form-group">
+                <label for="newPassword">Mật khẩu mới</label>
+                <input type="password" id="newPassword" name="newPassword" placeholder="Nhập mật khẩu mới" required />
+            </div>
+
+            <!-- Hiển thị thông báo lỗi cho mật khẩu nhập lại -->
+            @if (TempData["ErrConfirmPassword"] != null)
+            {
+                <span class="error">@TempData["ErrConfirmPassword"]</span>
+            }
+
+            <div class="form-group">
+                <label for="confirmPassword">Nhập lại mật khẩu mới</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Nhập lại mật khẩu mới" required />
+            </div>
+
+            <!-- Hiển thị thông báo lỗi cho email -->
+            @if (TempData["ErrEmail"] != null)
+            {
+                <span class="error">@TempData["ErrEmail"]</span>
+            }
+
+            <div class="form-group">
+                <label for="email">Địa chỉ email</label>
+                <input type="email" id="email" name="email" placeholder="Nhập email của bạn" required />
+            </div>
+
+            <!-- Nút gửi yêu cầu -->
+            <div class="nut">
+                <button type="submit" class="btn-change-password">Thay đổi mật khẩu</button>
+            </div>
+
+            <!-- Hiển thị thông báo thành công nếu có -->
+            @if (TempData["ThongBao"] != null)
+            {
+                <span class="success">@TempData["ThongBao"]</span>
+            }
+        </form>
+    </div>
+</div>
+

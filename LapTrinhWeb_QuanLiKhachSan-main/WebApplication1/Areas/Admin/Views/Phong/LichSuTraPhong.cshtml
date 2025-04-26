@@ -1,0 +1,128 @@
+﻿@model IEnumerable<WebApplication1.Models.LichSuTraPhong>
+
+@{
+    ViewBag.Title = "LichSuTraPhong";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>Lịch sử trả phòng</h2>
+
+
+<table class="table">
+    <tr>
+        
+        
+        <th>
+            <p>Phòng</p>
+        </th>
+        <th>
+            <p>Mã khách hàng</p>
+        </th>
+        <th>
+            <p>Họ tên</p>
+        </th>
+        <th>
+            <p>SDT</p>
+        </th>
+        <th>
+            <p>CCCD</p>
+        </th>
+        <th>
+            <p>Email</p>
+        </th>
+        <th>
+            <p>Giá</p>
+        </th>
+        <th>
+            <p>Ngày nhận</p>
+        </th>
+        <th>
+            <p>Ngày trả</p>
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        
+        
+        <td>
+            @Html.DisplayFor(modelItem => item.SoPH)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MaKH)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.HoTen)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DienThoai)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CCCD)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Email)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Gia)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NgayNhan)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NgayTra)
+        </td>
+        
+    </tr>
+}
+
+</table>
+
+<style>
+    /* Table Style */
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+        /* Table Header Style */
+        .table th {
+            background-color: black;
+            color: white;
+            padding: 10px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        /* Table Data Style */
+        .table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* Table Row Hover Effect */
+        .table tr:hover {
+            background-color: #f2f2f2;
+        }
+
+        /* Table Border */
+        .table th, .table td {
+            border: 1px solid #ddd;
+        }
+
+    /* Title Styling */
+    h2 {
+        font-size: 24px;
+        color: #333;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    /* Add spacing around the table */
+    .table-container {
+        margin: 20px;
+    }
+
+</style>

@@ -1,0 +1,67 @@
+﻿@{
+    var datPhong = Model as WebApplication1.Models.DATPHONG;
+    var phong = ViewBag.Phong as WebApplication1.Models.PHONG;
+    var dichVu = ViewBag.DichVu as WebApplication1.Models.DICHVU;
+}
+
+<section class="room-details-section spad">
+    <div class="container">
+        <h2>Xác nhận đặt phòng</h2>
+        <p>Mã Đặt Phòng: @datPhong.MaDP</p>
+        <p>Mã Khách Hàng: @datPhong.MaKH</p>
+        <p>Ngày Đặt: @(datPhong.NgayDat.HasValue ? datPhong.NgayDat.Value.ToShortDateString() : "Không có thông tin")</p>
+        <p>Ngày Nhận: @(datPhong.NgayNhan.HasValue ? datPhong.NgayNhan.Value.ToShortDateString() : "Không có thông tin")</p>
+        <p>Ngày Trả: @(datPhong.NgayTra.HasValue ? datPhong.NgayTra.Value.ToShortDateString() : "Không có thông tin")</p>
+        <p>Số ngày ở: @(datPhong.NgayTra.HasValue && datPhong.NgayNhan.HasValue ? (datPhong.NgayTra.Value - datPhong.NgayNhan.Value).Days : 0)</p>
+        <p>Đặt cọc: @String.Format("{0:0,0} VND", datPhong.DatCoc)</p>
+        <p>Tổng tiền: @String.Format("{0:0,0} VND", datPhong.DonGia)</p>
+    </div>
+</section>
+
+<style>
+    /* Thiết lập nền cho section */
+    .room-details-section {
+        padding: 60px 0;
+        background-color: #f9f9f9;
+    }
+
+
+
+    /* Tiêu đề */
+    .room-details-section h2 {
+        font-size: 2rem;
+        color: #333;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    /* Định dạng các đoạn thông tin */
+    .room-details-section p {
+        font-size: 1.1rem;
+        color: #555;
+        margin: 10px 0;
+    }
+
+        /* Định dạng các giá trị tiền */
+        .room-details-section p span {
+            font-weight: bold;
+            color: #e74c3c;
+        }
+
+        /* Định dạng khi giá trị ngày không có thông tin */
+        .room-details-section p em {
+            font-style: italic;
+            color: #999;
+        }
+
+    /* Tạo khung cho các thông tin chi tiết */
+    .room-details-section p {
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+    }
+
+        .room-details-section p:last-child {
+            border-bottom: none;
+        }
+</style>

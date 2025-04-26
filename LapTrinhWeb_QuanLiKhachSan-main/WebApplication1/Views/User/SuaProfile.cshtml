@@ -1,0 +1,152 @@
+﻿@model WebApplication1.Models.KHACHHANG
+@{
+    ViewBag.Title = "SuaProfile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("SuaProfile", "User", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-container">
+        <div class="form-header">
+            <h2>Cập nhật thông tin cá nhân</h2>
+        </div>
+
+        <div class="form-group">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        </div>
+
+        <!-- Giấu mã khách hàng -->
+        <div class="form-group">
+            <input type="text" name="Id" value="@Model.MaKH" readonly class="form-control hidden" />
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">Tên người dùng:</label>
+            <input type="text" name="Name" value="@Model.HoTen" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">Email:</label>
+            <input type="email" name="Email" value="@Model.Email" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">Số điện thoại:</label>
+            <input type="text" name="Phone" value="@Model.DienThoai" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">Địa chỉ:</label>
+            <input type="text" name="Address" value="@Model.DiaChi" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">Ảnh đại diện:</label>
+            <input type="file" name="FileUpload" class="form-control" />
+            @if (!string.IsNullOrEmpty(Model.Avatar))
+            {
+                <img src="~/Images/@Model.Avatar" width="120" alt="Profile Picture" class="avatar-preview" />  
+            }
+
+        </div>
+
+        <div class="form-group">
+            <div class="text-center">
+                <input type="submit" value="Lưu Thông Tin" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+
+<div class="text-center">
+    @Html.ActionLink("Quay lại trang quản lý", "Index", "User", new { @class = "btn btn-link" })
+</div>
+
+<style>
+    /* Căn chỉnh và bố cục chung */
+    .form-container {
+        width: 50%;
+        margin: 30px auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e0e0e0;
+    }
+
+    .form-header h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+        font-size: 24px;
+    }
+
+    /* Cải thiện các trường nhập */
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+        .form-group label {
+            font-weight: bold;
+            color: #555;
+        }
+
+    .form-control {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+        margin-top: 5px;
+    }
+
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+    /* Ẩn mã khách hàng */
+    .hidden {
+        display: none;
+    }
+
+    /* Cải thiện nút submit */
+    .btn {
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .btn-primary {
+        background-color: #fea116;
+        color: white;
+        border: none;
+        width: 100%;
+    }
+
+        .btn-primary:hover {
+            background-color: #c67701;
+        }
+
+    /* Tăng tính dễ đọc cho link */
+    .btn-link {
+        color: #007bff;
+        text-decoration: none;
+        font-size: 16px;
+    }
+
+        .btn-link:hover {
+            text-decoration: underline;
+        }
+
+    /* Định dạng hình ảnh avatar */
+    .avatar-preview {
+        display: block;
+        margin-top: 15px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+    }
+</style>

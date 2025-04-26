@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewBag.Title = "ThemDichVu";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+@model WebApplication1.Models.DICHVU
+<head>
+    <link href="~/Content/QLDichVu.css" rel="stylesheet" type="text/css" />
+</head>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken() <!-- Bảo mật chống CSRF -->
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.TenDV)
+        @Html.TextBoxFor(m => m.TenDV, new { @class = "form-control", placeholder = "Nhập tên dịch vụ" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Mota)
+        @Html.TextBoxFor(m => m.Mota, new { @class = "form-control", placeholder = "Nhập mô tả dịch vụ" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Gia)
+        @Html.TextBoxFor(m => m.Gia, new { @class = "form-control", type = "number", placeholder = "Nhập giá dịch vụ" })
+    </div>
+
+    <button type="submit" class="btn btn-success">Lưu</button>
+    <a href="@Url.Action("DSDichVu", "QL_DichVu")" class="btn btn-secondary">Hủy</a>
+}
+

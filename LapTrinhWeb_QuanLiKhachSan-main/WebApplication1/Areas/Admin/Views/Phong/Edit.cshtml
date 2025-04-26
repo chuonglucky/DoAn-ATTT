@@ -1,0 +1,322 @@
+﻿@model WebApplication1.Models.PHONG
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+<script src="~/ckeditor/ckeditor.js"></script>
+<h2>Edit Room</h2>
+
+@using (Html.BeginForm("Edit", "Phong", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Phòng @Model.SoPH </h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.MaPH, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.MaPH, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                @Html.ValidationMessageFor(model => model.MaPH, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SoPH, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.SoPH, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SoPH, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            @Html.Label("Ảnh phòng", new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input type="file" name="AnhUpload" class="form-control" />
+                @if (!string.IsNullOrEmpty(Model.Anh))
+                {
+                    <img src="~/Images/Sliders/@Model.Anh" alt="Room Image" style="max-width: 200px; margin-top: 10px;" />
+                }
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            <textarea name="MoTa" id="mota">@ViewBag.MoTa</textarea>
+            <script>
+                CKEDITOR.replace("mota", {
+                    customConfig: '/ckeditor/config.js',
+                    extraAllowedContent: 'span'
+                });
+            </script>
+
+        </div>
+
+
+        <!-- Trạng thái -->
+        <!--<div class="form-group">-->
+            @*@Html.LabelFor(model => model.TrangThai, htmlAttributes: new { @class = "control-label col-md-2" })*@
+            <!--@Html.Label("Ảnh phòng", new { @class = "control-label col-md-2" })
+
+
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.TrangThai,
+                    new SelectList(new[] { "Available", "Occupied", "Booked" }),
+                    htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.TrangThai, "", new { @class = "text-danger" })
+            </div>
+        </div>-->
+
+
+
+        <!-- Giá -->
+    <div class="form-group">
+        @*@Html.LabelFor(model => model.Gia, htmlAttributes: new { @class = "control-label col-md-2" })*@
+        @Html.Label("Giá", new { @class = "control-label col-md-2" })
+
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Gia, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Gia, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+
+        <!-- Loại phòng -->
+    <div class="form-group">
+        @*@Html.LabelFor(model => model.MaLoai, new { @class = "control-label col-md-2" })*@
+        @Html.Label("Giá", new { @class = "control-label col-md-2" })
+
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.MaLoai, (SelectList)ViewBag.MaLoai, "Chọn loại phòng", new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.MaLoai, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @*@Html.LabelFor(model => model.NoiThat, htmlAttributes: new { @class = "control-label col-md-2" })*@
+        @Html.Label("Nội thất", new { @class = "control-label col-md-2" })
+
+        <div class="col-md-10">
+            @Html.TextAreaFor(model => model.NoiThat, new { @class = "form-control", rows = 2 })
+            @Html.ValidationMessageFor(model => model.NoiThat, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @*@Html.LabelFor(model => model.DienTich, htmlAttributes: new { @class = "control-label col-md-2" })*@
+        @Html.Label("Diện tích", new { @class = "control-label col-md-2" })
+
+        <div class="col-md-10">
+            @*@Html.TextAreaFor(model => model.DienTich, new { @class = "form-control", rows = 2 })
+        @Html.ValidationMessageFor(model => model.DienTich, "", new { @class = "text-danger" })*@
+            @Html.EditorFor(model => model.DienTich, new { htmlAttributes = new { @class = "form-control", type = "number", step = "1" } })
+            @Html.ValidationMessageFor(model => model.DienTich, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-primary text-white" />
+                <button type="button" onclick="window.location.href='@Url.Action("DanhSachPhong", "Phong")'" class="btn btn-secondary">Back to List</button>
+            </div>
+        </div>
+
+    </div>
+}
+<style>
+    /* Nút chung */
+    /*.btn {
+        padding: 12px 24px;*/ /* Tăng kích thước nút */
+        /*font-size: 16px;*/ /* Kích thước chữ lớn hơn */
+        /*font-weight: 600;*/ /* Đậm hơn */
+        /*border-radius: 8px;*/ /* Bo góc lớn hơn */
+        /*border: none;
+        text-transform: uppercase;*/ /* Viết hoa toàn bộ */
+        /*cursor: pointer;
+        transition: all 0.3s ease-in-out;*/ /* Hiệu ứng chuyển đổi mượt */
+        /*box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);*/ /* Thêm hiệu ứng đổ bóng */
+    /*}*/
+
+    /* Nút Primary */
+    /*.btn-primary {
+        background-color: #007bff;*/ /* Màu xanh chuẩn */
+        /*color: white;*/ /* Màu chữ */
+    /*}
+
+        .btn-primary:hover {
+            background-color: #0056b3;*/ /* Màu khi hover */
+            /*transform: translateY(-2px);*/ /* Nâng nút lên khi hover */
+            /*box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);*/ /* Tăng độ sâu bóng */
+        /*}*/
+
+    /* Nút Secondary */
+    /*.btn-secondary {
+        background-color: #6c757d;*/ /* Màu xám chuẩn */
+        /*color: white;*/ /* Màu chữ */
+    /*}
+
+        .btn-secondary:hover {
+            background-color: #5a6268;*/ /* Màu khi hover */
+            /*transform: translateY(-2px);*/ /* Nâng nút lên khi hover */
+            /*box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);*/ /* Tăng độ sâu bóng */
+        /*}*/
+
+    /* Hiệu ứng focus */
+    /*.btn:focus {
+        outline: none;*/ /* Loại bỏ đường viền mặc định */
+        /*box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);*/ /* Hiệu ứng focus */
+    /*}*/
+
+    /* Animation nhấn xuống */
+    /*.btn:active {
+        transform: translateY(0);*/ /* Trả về vị trí ban đầu khi nhấn */
+        /*box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);*/ /* Giảm bóng */
+    /*}*/
+    /* Form container */
+    .form-horizontal {
+        max-width: 900px; /* Chiều rộng tối đa của form */
+        margin: 20px auto; /* Căn giữa form */
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Bóng đổ nhẹ cho form */
+    }
+
+    /* Tạo khoảng cách giữa các nhóm trong form */
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 1.5rem;
+    }
+
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 0.5rem; /* Khoảng cách giữa label và input */
+            color: #495057;
+        }
+
+    /* Input fields (text, number, file, textarea) */
+    .form-control {
+        width: 100%;
+        padding: 0.75rem; /* Thêm padding cho các input và textarea */
+        font-size: 1rem;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        background-color: #fff;
+        transition: border-color 0.3s, box-shadow 0.3s; /* Thêm hiệu ứng khi focus vào input */
+    }
+
+        /* Khi input được focus */
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25);
+            outline: none;
+        }
+
+    /* Cải thiện diện mạo cho các dropdown */
+    select.form-control {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        padding-right: 2rem; /* Thêm khoảng trống cho dấu mũi tên */
+    }
+
+    /* Ảnh đại diện */
+    .form-group img {
+        max-width: 200px;
+        margin-top: 10px;
+        border-radius: 4px;
+    }
+
+    /* Thông báo lỗi */
+    .text-danger {
+        font-size: 0.875rem;
+        color: #e74a3b;
+    }
+
+    /* Các nút (Save và Back) */
+    #nut {
+        display: flex;
+        justify-content: flex-start;
+        gap: 10px;
+    }
+
+        /* Nút Save */
+        #nut input[type="submit"] {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            background-color: #007bff;
+            color: white;
+            border: 1px solid #007bff;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+            #nut input[type="submit"]:hover {
+                background-color: #0056b3;
+            }
+
+        /* Nút Back */
+        #nut button {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            background-color: #6c757d;
+            color: white;
+            border: 1px solid #6c757d;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+            #nut button:hover {
+                background-color: #5a6268;
+            }
+
+    /* Nút Quay lại trong phần cuối form */
+    #back {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+        #back a {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            background-color: #6c757d;
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+            #back a:hover {
+                background-color: #5a6268;
+            }
+
+    /* Cải thiện giao diện CKEditor */
+    textarea {
+        font-family: Arial, sans-serif;
+        font-size: 1rem;
+        padding: 0.75rem;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        resize: vertical;
+    }
+
+        textarea:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25);
+            outline: none;
+        }
+
+    /* Thêm khoảng cách giữa các phần tử trong form */
+    .form-group:not(:last-child) {
+        margin-bottom: 20px;
+    }
+
+</style>
+
+
+
+

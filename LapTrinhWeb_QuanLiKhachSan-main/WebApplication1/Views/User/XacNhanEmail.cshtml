@@ -1,0 +1,130 @@
+﻿@{
+    ViewBag.Title = "Xác nhận email";
+    Layout = null;
+}
+
+<style>
+    /* CSS kế thừa từ đăng ký */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: #f9f9f9;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .verification-page {
+        width: 100%;
+        max-width: 500px;
+        background: #ffffff;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .verification-container {
+        text-align: center;
+    }
+
+    h2 {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    p {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .form-group {
+        text-align: left;
+        margin-bottom: 20px;
+    }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            background: #f4f5f7;
+        }
+
+            .form-group input:focus {
+                border-color: #2575fc;
+                outline: none;
+                box-shadow: 0 0 5px rgba(37, 117, 252, 0.5);
+            }
+
+    .btn-verify {
+        width: 100%;
+        padding: 10px;
+        background: #2575fc;
+        color: #fff;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-top: 20px;
+    }
+
+        .btn-verify:hover {
+            background: #1e63d8;
+        }
+
+    .info-message {
+        margin-top: 20px;
+        font-size: 14px;
+        color: #666;
+    }
+
+        .info-message a {
+            color: #2575fc;
+            text-decoration: none;
+        }
+
+            .info-message a:hover {
+                text-decoration: underline;
+            }
+
+    .error-message {
+        color: red;
+        font-size: 14px;
+        margin-top: 10px;
+    }
+</style>
+
+<div class="verification-page">
+    <div class="verification-container">
+        <h2>Email Verification</h2>
+        <p>A verification code has been sent to your email. Please enter it below to complete registration.</p>
+        <form method="post" action="/User/XacNhanEmail">
+            <div class="form-group">
+                <label for="verificationCode">Verification Code</label>
+                <input type="text" id="verificationCode" name="verificationCode" placeholder="Enter verification code" required />
+            </div>
+            <button type="submit" class="btn-verify">Verify</button>
+        </form>
+        @if (ViewBag.ThongBao != null)
+        {
+            <p class="error-message">@ViewBag.ThongBao</p>
+        }
+        <div class="info-message">
+            <p>Didn’t receive the code? <a href="/User/ResendVerificationCode">Resend Code</a></p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,169 @@
+﻿@{
+    ViewBag.Title = "DangKy";
+    Layout = null;
+}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: #f9f9f9;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .register-page {
+        width: 100%;
+        max-width: 800px;
+        background: #ffffff;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .register-container {
+        text-align: center;
+    }
+
+    h2 {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    p {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .form-group {
+        text-align: left;
+    }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            background: #f4f5f7;
+        }
+
+            .form-group input:focus,
+            .form-group select:focus {
+                border-color: #2575fc;
+                outline: none;
+                box-shadow: 0 0 5px rgba(37, 117, 252, 0.5);
+            }
+
+    .btn-register {
+        grid-column: span 2;
+        padding: 10px;
+        background: #2575fc;
+        color: #fff;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-top: 20px;
+    }
+
+        .btn-register:hover {
+            background: #1e63d8;
+        }
+
+    .login-link {
+        margin-top: 20px;
+        font-size: 14px;
+        color: #666;
+    }
+
+        .login-link a {
+            color: #2575fc;
+            text-decoration: none;
+        }
+
+            .login-link a:hover {
+                text-decoration: underline;
+            }
+
+</style>
+<div class="register-page">
+    <div class="register-container">
+        <h2>Sign Up</h2>
+        <p>Please fill in your details</p>
+        <form method="post" action="/User/DangKy">
+            <div class="form-group">
+                <label for="HoTen">Full Name</label>
+                <input type="text" id="HoTen" name="HoTen" placeholder="Enter your full name" required />
+            </div>
+            <div class="form-group">
+                <label for="DiaChi">Address</label>
+                <input type="text" id="DiaChi" name="DiaChi" placeholder="Enter your address" required />
+            </div>
+            <div class="form-group">
+                <label for="DienThoai">Phone Number</label>
+                <input type="text" id="DienThoai" name="DienThoai" placeholder="Enter your phone number" required />
+            </div>
+            <div class="form-group">
+                <label for="GioiTinh">Gender</label>
+                <select id="GioiTinh" name="GioiTinh" required>
+                    <option value="Nam">Male</option>
+                    <option value="Nữ">Female</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="CCCD">CCCD:</label>
+                <input type="text" id="CCCD" name="CCCD" placeholder="Nhập số CCCD" required />
+            </div>
+
+            <div class="form-group">
+                <label for="NgaySinh">Date of Birth</label>
+                <input type="date" id="NgaySinh" name="NgaySinh" required />
+            </div>
+            <div class="form-group">
+                <label for="QuocTich">Nationality</label>
+                <input type="text" id="QuocTich" name="QuocTich" placeholder="Enter your nationality" required />
+            </div>
+            <div class="form-group">
+                <label for="Email">Email</label>
+                <input type="email" id="Email" name="Email" placeholder="Enter your email" required />
+            </div>
+            <div class="form-group">
+                <label for="Username">Username</label>
+                <input type="text" id="Username" name="Username" placeholder="Enter your username" required />
+            </div>
+            <div class="form-group">
+                <label for="Password">Password</label>
+                <input type="password" id="Password" name="Password" placeholder="Enter your password" required />
+            </div>
+            <div class="form-group">
+                <label for="ConfirmPassword">Confirm Password</label>
+                <input type="password" id="ConfirmPassword" name="ConfirmPassword" placeholder="Confirm your password" required />
+            </div>
+            <button type="submit" class="btn-register">Sign Up</button>
+        </form>
+        <div class="login-link">
+            <p>Already have an account? <a href="/User/DangNhap">Log in</a></p>
+        </div>
+    </div>
+</div>

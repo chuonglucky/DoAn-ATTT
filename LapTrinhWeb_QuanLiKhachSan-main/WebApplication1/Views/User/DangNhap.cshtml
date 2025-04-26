@@ -1,0 +1,69 @@
+﻿@{
+    ViewBag.Title = "DangNhap";
+    Layout = null;
+}
+<link rel="stylesheet" href="~/StyleCSS/DangNhap.css" />
+
+<div class="login-page">
+    <div class="login-container">
+        <div class="form-container">
+            <h2>Welcome back!</h2>
+            <p>Please enter your details</p>
+            <form method="post" action="/User/DangNhap">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username"
+                           placeholder="Enter your username"
+                           required
+                           value="@(Request.Cookies["Username"] != null ? Request.Cookies["Username"].Value : "")" />
+                    @if (ViewData["Err1"] != null)
+                    {
+                        <span class="error">@ViewData["Err1"]</span>
+                    }
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password"
+                           placeholder="Enter your password"
+                           required
+                           value="@(Request.Cookies["Password"] != null ? Request.Cookies["Password"].Value : "")" />
+                    @if (ViewData["Err2"] != null)
+                    {
+                        <span class="error">@ViewData["Err2"]</span>
+                    }
+                </div>
+
+
+                <div class="form-options">
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember" name="remember"
+                               @(Request.Cookies["Username"] != null ? "checked" : "") />
+                        <label for="remember">Remember for 30 days</label>
+                    </div>
+                    <a href="@Url.Action("QuenMatKhau", "User")" class="forgot-password">Forgot password?</a>
+                </div>
+                <h4 style="color:red; text-align:center;">@ViewBag.ThongBao</h4>
+                <div class="nut">
+                    <button type="submit" class="btn-login">Log in</button>
+                    <button type="button" class="btn-google">
+                        <a href="@ViewBag.response" class="aaa">
+                            <img src="~/Images/google-icon.png" alt="Icon" class="btn-icon"> Login with Google
+                        </a>
+                    </button>
+                    <button type="button" class="btn-google">
+                        <a href="@Url.Action("LoginWithFacebook", "User")" class="aaa" onclick="login();">
+                            <img src="~/Images/facebook.png" alt="Icon" class="btn-icon"> Login with Facebook
+                        </a>
+                    </button>
+                </div>
+            </form>
+            <div class="register-link">
+                <p>Don't have an account? <a href="/User/DangKy">Sign up</a></p>
+            </div>
+        </div>
+        <div class="image-container">
+            <img src="~/Images/Login.gif" alt="Illustration" />
+        </div>
+    </div>
+</div>

@@ -1,0 +1,88 @@
+﻿@model WebApplication1.Models.PHONG
+
+@{
+    ViewBag.Title = "Trả Phòng";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>Trả Phòng</h2>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<div class="form-group">
+    <label><strong>Mã Phòng:</strong></label>
+    <p>@Model.MaPH</p>
+</div>
+
+<div class="form-group">
+    <label><strong>Số Phòng:</strong></label>
+    <p>@Model.SoPH</p>
+</div>
+
+<div class="form-group">
+    <label><strong>Trạng Thái Phòng:</strong></label>
+    @if (ViewBag.SoLuongDangO > 0)
+    {
+        <p class="text-success">Phòng đang có khách (Số khách đang ở: @ViewBag.SoLuongDangO).</p>
+    }
+    else
+    {
+        <p class="text-danger">Phòng hiện đang trống.</p>
+    }
+</div>
+
+@if (ViewBag.SoLuongDangO > 0)
+{
+    <form action="@Url.Action("TraPhong", "Phong", new { area = "Admin" })" method="post">
+        <input type="hidden" name="MaPH" value="@Model.MaPH" />
+
+        <div class="form-group">
+            <label><strong>Họ Tên Khách Hàng:</strong></label>
+            <input type="text" class="form-control" name="HoTen" value="@ViewBag.HoTen" readonly />
+        </div>
+
+        <div class="form-group">
+            <label><strong>Số Điện Thoại:</strong></label>
+            <input type="text" class="form-control" name="DienThoai" value="@ViewBag.DienThoai" readonly />
+        </div>
+
+        <div class="form-group">
+            <label><strong>CCCD:</strong></label>
+            <input type="text" class="form-control" name="CCCD" value="@ViewBag.CCCD" readonly />
+        </div>
+
+        <div class="form-group">
+            <label><strong>Email:</strong></label>
+            <input type="email" class="form-control" name="Email" value="@ViewBag.Email" readonly />
+        </div>
+
+        <div class="form-group">
+            <label><strong>Giá Phòng (VNĐ):</strong></label>
+            <input type="number" class="form-control" name="Gia" value="@Model.Gia" readonly />
+        </div>
+
+        <div class="form-group">
+            <label><strong>Ngày Nhận:</strong></label>
+            <input type="date" class="form-control" name="NgayNhan" value="@ViewBag.NgayNhan?.ToString(" yyyy-MM-dd")" readonly />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Trả Phòng</button>
+        <a href="@Url.Action("DanhSachPhong", "Phong")" class="btn btn-secondary">Hủy</a>
+    </form>
+}
+else
+{
+    <a href="@Url.Action("DanhSachPhong", "Phong")" class="btn btn-secondary">Quay lại</a>
+}

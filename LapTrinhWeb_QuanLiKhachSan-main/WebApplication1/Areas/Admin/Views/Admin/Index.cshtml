@@ -1,0 +1,47 @@
+﻿
+@{
+    var nhanVien = ViewBag.ThongTinNhanVien as WebApplication1.Models.NHANVIEN;
+    var vaiTro = ViewBag.VaiTro as string;
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>Chào mừng đến trang quản trị</h2>
+
+@if (nhanVien != null)
+{
+    <h3>Thông tin người dùng</h3>
+    <table class="table table-bordered">
+        <tr>
+            <th>Họ Tên</th>
+            <td>@nhanVien.HoTen</td>
+        </tr>
+        @*<tr>
+            <th>Vai trò</th>
+            <td>@vaiTro</td>
+        </tr>*@
+        <tr>
+            <th>Địa chỉ</th>
+            <td>@nhanVien.DiaChi</td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td>@nhanVien.Email</td>
+        </tr>
+        <tr>
+            <th>Số Điện Thoại</th>
+            <td>@nhanVien.DienThoai</td>
+        </tr>
+        <tr>
+            <th>Giới tính</th>
+            <td>@nhanVien.GioiTinh</td>
+        </tr>
+        <tr>
+            <th>Chức vụ</th>
+            <td>@nhanVien.ChucVu</td>
+        </tr>
+    </table>
+}
+else
+{
+    <p>Không tìm thấy thông tin người dùng!</p>
+}

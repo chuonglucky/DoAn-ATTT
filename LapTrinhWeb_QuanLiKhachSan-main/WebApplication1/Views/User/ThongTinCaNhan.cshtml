@@ -1,0 +1,125 @@
+﻿@model WebApplication1.Models.KHACHHANG
+
+@{
+    ViewBag.Title = "ThongTinCaNhan";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.DiaChi = 5;
+}
+
+<div class="profile-container">
+    <div class="profile-header">
+        <h3>Thông tin cá nhân</h3>
+    </div>
+
+    <div class="profile-info">
+        <div class="profile-picture">
+            @if (!string.IsNullOrEmpty(Model.Avatar))
+            {
+                <img src="@Url.Content("~/Images/" + Model.Avatar)" alt="Profile Picture" />
+            }
+            else
+            {
+                <img src="@Url.Content("~/Images/User/DefaultAvatar.jpg")" alt="Default Avatar" />
+            }
+        </div>
+
+        <div class="profile-details">
+            <p><strong>Full Name:</strong> @Model.HoTen</p>
+            <p><strong>Email:</strong> @Model.Email</p>
+            <p><strong>Phone Number:</strong> @Model.DienThoai</p>
+            <p><strong>Address:</strong> @Model.DiaChi</p>
+        </div>
+    </div>
+
+    <div class="profile-actions">
+       <table>
+           <tr>
+               <a href="@Url.Action("SuaProfile", new { id = Model.MaKH })" class="btn-edit-profile">Sửa thông tin</a>
+           </tr>
+           @*<tr>
+               <a href="@Url.Action("ThayDoiMatKhau", new { id = Model.MaKH })" class="btn-edit-profile">Đổi mật khẩu</a>
+           </tr>*@
+       </table>
+    </div>
+</div>
+
+<style>
+    .profile-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        font-family: 'Times New Roman', Times, serif; /* Đổi font chữ */
+        background-color: #f3f8fc; /* Màu nền sáng hơn (màu xanh nhạt) */
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 128, 255, 0.3); /* Bóng đổ màu xanh dương với độ mờ */
+    }
+
+    /* Profile header */
+    .profile-header h3 {
+        font-size: 32px; /* Tăng kích thước chữ */
+        font-weight: bold;
+        color: #333;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    /* Profile information section */
+    .profile-info {
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 20px;
+        justify-content: center;
+    }
+
+    /* Profile picture */
+    .profile-picture {
+        flex: 1 1 150px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: 20px;
+    }
+
+        .profile-picture img {
+            width: 150px; /* Tăng kích thước ảnh */
+            height: 150px; /* Tăng kích thước ảnh */
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ccc;
+        }
+
+    /* Profile details */
+    .profile-details {
+        flex: 2 1 300px;
+    }
+
+        .profile-details p {
+            font-size: 20px; /* Tăng kích thước chữ */
+            margin: 8px 0;
+            color: #555;
+        }
+
+        .profile-details strong {
+            color: #333;
+        }
+
+    /* Edit profile button */
+    .profile-actions {
+        text-align: center;
+        margin-top: 30px;
+    }
+
+    .btn-edit-profile {
+        background-color: #fea116;
+        color: white;
+        padding: 10px 20px;
+        font-size: 20px; /* Tăng kích thước chữ */
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-edit-profile:hover {
+            background-color: #f99601;
+        }
+</style>

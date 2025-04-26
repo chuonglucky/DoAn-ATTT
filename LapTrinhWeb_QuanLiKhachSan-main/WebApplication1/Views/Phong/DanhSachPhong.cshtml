@@ -1,0 +1,74 @@
+﻿@{
+    ViewBag.DiaChi = 1;
+    ViewBag.Title = "Danh sách phòng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using WebApplication1.Models;
+@using PagedList.Mvc;
+@model PagedList.PagedList<PHONG>
+@{
+    var i = 0;
+}
+<link rel="stylesheet" href="~/StyleCSS/DanhSachPhong.css" />
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<script>
+    function submitFilterForm() {
+        document.getElementById('filterForm').submit();
+    }
+</script>
+<!-- Filter Section (Bộ lọc theo loại phòng) -->
+<div class="col-lg-3">
+    <form method="get" action="@Url.Action("DanhSachPhong")" id="filterForm">
+        <div class="filter-box">
+            <h4>Filter by Room Type</h4>
+            <select name="selectedLoaiPhong" class="form-control" onchange="submitFilterForm()">
+                <option value="">All Room Types</option>
+                @foreach (var item in ViewBag.LoaiPhongList as SelectList)
+                {
+                    <option value="@item.Value" @(item.Value == Request["selectedLoaiPhong"] ? "selected" : "")>@item.Text</option>
+                }
+            </select>
+        </div>
+    </form>
+</div>
+
+<h2> Our Rooms</h2>
+<section class="rooms-section spad">
+    <div class="container">
+        <div class="row">
+            @foreach (var room in Model)
+            {
+                i++;
+                <div class="col-lg-4 col-md-6">
+                    <div class="room-item">
+                        <img src="~/Images/Sliders/@room.Anh" class=" w-100" alt="@room.SoPH">
+                        <div class="ri-text">
+                            <h4>Phòng @room.SoPH</h4>
+                            <h3>@room.Gia VND<span>/Per Night</span></h3>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td class="r-o">Nội thất:</td>
+                                        <td>@room.NoiThat</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="r-o">Diện tích:</td>
+                                        <td>@room.DienTich</td>
+                                    </tr>
+                                    
+
+                                </tbody>
+                            </table>
+                            <a href="@Url.Action("ChiTietPhong", "Phong", new { id = room.MaPH })" class="primary-btn">More Details</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+<div class="MenuTrang">
+    @Html.PagedListPager(Model, page => Url.Action("DanhSachPhong", new { page = page }))
+</div>
+

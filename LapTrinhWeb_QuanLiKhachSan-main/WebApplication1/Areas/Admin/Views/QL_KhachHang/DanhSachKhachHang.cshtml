@@ -1,0 +1,81 @@
+﻿@model IEnumerable<WebApplication1.Models.KHACHHANG>
+
+@{
+    ViewBag.Title = "DanhSachKhachHang";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>Danh sách khách hàng</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.MaKH)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.HoTen)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DiaChi)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DienThoai)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.GioiTinh)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Avatar)
+        </th>
+        <th>Hành động</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaKH)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HoTen)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DiaChi)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DienThoai)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GioiTinh)
+            </td>
+            <td>
+                @if (@item.Avatar == null)
+                {
+                    <p>chưa cài đặt ảnh đại diện</p>
+                }
+                else
+                {
+                    <img style="max-width: 150px; max-height: 150px; width: auto; height: auto;"
+                         src="~/Images/@Html.DisplayFor(modelItem => item.Avatar)" />
+
+                }
+            </td>
+            <td>
+                <p>
+                    <a href="@Url.Action("Edit", "QL_KhachHang", new { MaKH = item.MaKH })" class="btn btn-primary">Edit</a> |
+                    <a href="@Url.Action("Chitietkhachhang", "QL_KhachHang", new { MaKH = item.MaKH })" class="btn btn-info">Details</a> |
+                    <a href="@Url.Action("Delete", "QL_KhachHang", new { MaKH = item.MaKH })" class="btn btn-danger">Delete</a>
+                </p>
+
+                @if (Session["UserChucVu"] != null && Session["UserChucVu"].ToString() == "Quan ly")
+                {
+                    <span> | </span>
+                    <a href="@Url.Action("LichSuThayDoi", "QL_KhachHang", new { MaKH = item.MaKH })" class="btn btn-info">Xem lịch sử thay đổi</a>
+                }
+            </td>
+        </tr>
+    }
+</table>
+<style>
+
+</style>

@@ -1,0 +1,132 @@
+﻿@model IEnumerable<WebApplication1.Models.LOAIPHONG>
+
+@{
+    ViewBag.Title = "DanhSachLoaiPhong";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>Danh sách loại phòng</h2>
+
+<p>
+    <button type="button" class="btn btn-create" data-bs-toggle="modal" data-bs-target="#createModal">
+        Create New
+    </button>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Mã loại</th>
+            <th>Tên loại</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.MaLoai)</td>
+                <td>@Html.DisplayFor(modelItem => item.TenLoai)</td>
+                <td>
+                    <!-- Edit and Delete buttons styled as btn -->
+                    <button class="btn btn-edit" onclick="window.location.href='@Url.Action("Edit", "QL_LoaiPhong", new { maLoai = item.MaLoai })'">
+                        Edit
+                    </button>
+                    |
+                    <button class="btn btn-delete" onclick="window.location.href='@Url.Action("Delete", "QL_LoaiPhong", new { maLoai = item.MaLoai })'">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createModalLabel">Tạo mới Loại Phòng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("Create", "QL_LoaiPhong", FormMethod.Post))
+                {
+                    <div class="mb-3">
+                        <label for="MaLoai" class="form-label">Mã Loại</label>
+                        @Html.TextBox("MaLoai", null, new { @class = "form-control", id = "MaLoai" })
+                    </div>
+                    <div class="mb-3">
+                        <label for="TenLoai" class="form-label">Tên Loại</label>
+                        @Html.TextBox("TenLoai", null, new { @class = "form-control", id = "TenLoai" })
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Lưu</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom CSS -->
+<style>
+    /* Keep existing layout styles */
+    @@import url('https://stackpath.bootstrapcdn.com/bootstrap/5.1.0/css/bootstrap.min.css');
+
+    .btn-create {
+        background-color: #1F4529;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+        .btn-create:hover {
+            background-color: #155D29;
+        }
+
+    /* Style for Edit and Delete buttons */
+    .btn-edit {
+        background-color: #1F4529;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-edit:hover {
+        background-color: #155D29;
+    }
+
+    .btn-delete {
+        background-color: #FF4D4D;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-delete:hover {
+        background-color: #E02A2A;
+    }
+
+    /* Modal styling (if needed) */
+    .modal-content {
+        background-color: #fff;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+    }
+
+    .modal-header {
+        background-color: #1F4529;
+        color: white;
+    }
+
+    .modal-footer button {
+        background-color: #1F4529;
+        color: white;
+    }
+
+    .modal-footer button:hover {
+        background-color: #155D29;
+    }
+</style>

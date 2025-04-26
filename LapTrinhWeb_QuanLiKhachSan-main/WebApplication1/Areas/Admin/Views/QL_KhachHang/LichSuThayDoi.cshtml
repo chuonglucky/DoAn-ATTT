@@ -1,0 +1,33 @@
+﻿
+@{
+    ViewBag.Title = "LichSuThayDoi";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Trường thay đổi</th>
+            <th>Giá trị cũ</th>
+            <th>Giá trị mới</th>
+            <th>Ngày thay đổi</th>
+            <th>Người thay đổi</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.TruongThayDoi</td>
+                <td>@item.GiaTriCu</td>
+                <td>@item.GiaTriMoi</td>
+                <td>@item.NgayThayDoi</td>
+                <td>@item.NguoiThayDoi</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div>
+    <button type="button" onclick="window.location.href='@Url.Action("DanhSachKhachHang", "QL_KhachHang")'" class="btn btn-secondary">Back to List</button>
+</div>
+

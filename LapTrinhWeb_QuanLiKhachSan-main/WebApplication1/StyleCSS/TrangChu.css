@@ -1,0 +1,352 @@
+﻿/* Ưu đãi */
+
+/* Fixed height for the carousel to prevent layout shift */
+#discountCarousel {
+    position: relative;
+    height: 400px; /* Adjust this height based on the image size */
+    overflow: hidden; /* Hide overflow to ensure nothing leaks out of the container */
+}
+
+/* Ensures the carousel-inner fills the container height */
+.carousel-inner {
+    height: 100%; /* Stretch inner part to match the height of the carousel */
+    display: flex; /* Keep items aligned for better control */
+    align-items: center; /* Vertically center content */
+}
+
+/* Ensure images maintain aspect ratio and fill the container */
+.carousel-item img {
+    width: 100%; /* Make the image responsive to the width of the container */
+    height: 100%; /* Stretch image to fill full height of the container */
+    object-fit: cover; /* Ensure images fill the container while keeping proportions */
+    object-position: center; /* Center the cropped area of the image */
+    transition: transform 0.3s ease; /* Add smooth scaling effect on hover */
+}
+
+    .carousel-item img:hover {
+        transform: scale(1.05); /* Slight zoom effect for interactivity */
+    }
+
+/* Navigation buttons */
+.carousel-control-prev,
+.carousel-control-next {
+    background: none; /* Remove default button background */
+    border: none; /* Remove any border from buttons */
+    color: #000; /* Set button arrow color */
+    font-size: 2rem; /* Adjust arrow size */
+    opacity: 0.8; /* Slight transparency for a cleaner look */
+    transition: opacity 0.3s ease; /* Smooth fade on hover */
+}
+
+    .carousel-control-prev:hover,
+    .carousel-control-next:hover {
+        opacity: 1; /* Full opacity on hover */
+    }
+
+/* Navigation arrow icons */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    filter: invert(1); /* Invert color of the icons for better contrast */
+    width: 2rem; /* Adjust size of the arrows */
+    height: 2rem; /* Ensure height matches width for uniform appearance */
+}
+
+/* Caption styles (if needed inside the carousel) */
+.carousel-item .large-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333; /* Adjust color to fit the design theme */
+    margin-bottom: 10px;
+}
+
+.carousel-item .large-text,
+.carousel-item .details-text,
+.carousel-item .call-to-action {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #555; /* Subtle color for descriptive text */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    #discountCarousel {
+        height: 300px; /* Reduce height for smaller devices */
+    }
+
+    .carousel-item img {
+        object-fit: contain; /* Adjust image scaling for smaller screens */
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        font-size: 1.5rem; /* Reduce arrow size for smaller screens */
+    }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        width: 1.5rem; /* Smaller arrow icons for mobile */
+        height: 1.5rem;
+    }
+}
+
+
+/* Plan Section Styles */
+.plan-tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.tab {
+    background-color: #f1f1f1;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    margin: 0 5px;
+    transition: background-color 0.3s;
+}
+
+    .tab.active {
+        background-color: #007bff;
+        color: white;
+    }
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.grid-item {
+    background: #f9f9f9;
+    border-radius: 10px;
+    overflow: hidden;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+}
+
+    .grid-item img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .grid-item:hover {
+        transform: scale(1.05);
+    }
+
+    .grid-item h3 {
+        font-size: 1.2em;
+        color: #555;
+    }
+
+    .grid-item p {
+        color: #777;
+        margin-bottom: 10px;
+    }
+
+    .grid-item .distance {
+        color: #444;
+        font-weight: bold;
+    }
+
+/* Phần CSS đã có trước đó */
+
+/* Phần CSS cho Phòng yêu thích */
+#favoriteRoomSection .grid-item {
+    background: #f9f9f9;
+    border-radius: 10px;
+    overflow: hidden;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+}
+
+    #favoriteRoomSection .grid-item:hover {
+        transform: scale(1.05);
+    }
+
+    #favoriteRoomSection .grid-item img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 10px 10px 0 0;
+    }
+
+    #favoriteRoomSection .grid-item h3 {
+        font-size: 1.2em;
+        color: #333;
+        margin: 10px 0;
+    }
+
+    #favoriteRoomSection .grid-item p {
+        color: #555;
+        margin: 5px 0;
+    }
+
+        #favoriteRoomSection .grid-item p strong {
+            color: #007bff;
+        }
+
+
+/*chi tiet uu dai*/
+.deals-list .deal img {
+    max-height: 250px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.deals-list .deal h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.deals-list .deal p {
+    font-size: 1rem;
+    color: #555;
+}
+
+.pagination-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+/*Offer*/
+/* Section and image styles */
+.wrap-about .img {
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+    height: 300px;
+}
+
+/* Style for service icons */
+.services-2 .icon img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    margin-bottom: 10px;
+}
+
+/* Style for the service description */
+.services-2 .media-body h3 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Ensure the images look consistent and responsive */
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+/* Add hover effects for the services section */
+.services-2:hover {
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transform: scale(1.05);
+    transition: all 0.3s ease;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+    .wrap-about .img {
+        height: 200px; /* Adjust image height for smaller screens */
+    }
+
+    .services-2 .icon img {
+        width: 40px; /* Smaller icon size */
+        height: 40px;
+    }
+}
+
+/*Ready to start*/
+/* Kiểu dáng cho phần intro với hình nền */
+.ftco-intro {
+    position: relative;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    padding: 100px 0; /* Điều chỉnh khoảng cách trên dưới */
+    color: #fff;
+}
+
+    /* Lớp phủ để làm tối hình nền */
+    .ftco-intro .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4); /* Lớp phủ bán trong suốt */
+        z-index: 1;
+    }
+
+    /* Căn giữa nội dung trong container */
+    .ftco-intro .container {
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Kiểu dáng cho tiêu đề trong phần intro */
+    .ftco-intro h2 {
+        font-size: 2.5rem; /* Điều chỉnh kích thước tiêu đề */
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-transform: uppercase; /* Chữ hoa để nhấn mạnh */
+    }
+
+    /* Kiểu dáng cho đoạn văn mô tả */
+    .ftco-intro p {
+        font-size: 1.125rem;
+        line-height: 1.6;
+        margin-bottom: 30px;
+    }
+
+    /* Kiểu dáng cho các nút bấm */
+    .ftco-intro .btn {
+        border-radius: 5px;
+        text-transform: uppercase;
+        font-weight: bold;
+        padding: 12px 30px;
+        margin: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .ftco-intro .btn-primary {
+        background-color: #FF6F61; /* Màu hồng giống trong ảnh */
+        color: #fff;
+        border: none;
+    }
+
+    .ftco-intro .btn-white {
+        background-color: #fff;
+        color: #333;
+        border: 2px solid #FF6F61; /* Viền màu hồng */
+    }
+
+    .ftco-intro .btn:hover {
+        transform: translateY(-3px); /* Hiệu ứng khi hover */
+        opacity: 0.8;
+    }
+
+/* Điều chỉnh responsive cho thiết bị di động */
+@media (max-width: 768px) {
+    .ftco-intro {
+        padding: 60px 0; /* Giảm padding trên các màn hình nhỏ */
+    }
+
+        .ftco-intro h2 {
+            font-size: 2rem; /* Giảm kích thước tiêu đề cho màn hình nhỏ */
+        }
+
+        .ftco-intro p {
+            font-size: 1rem; /* Giảm kích thước đoạn văn */
+        }
+}

@@ -1,0 +1,370 @@
+﻿/* Chung cho toàn bộ trang */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Phần header và container */
+.room-details-section {
+    padding: 60px 0;
+    background-color: #ffffff;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.col-lg-8 {
+    flex: 0 0 66.6667%;
+    max-width: 66.6667%;
+}
+
+/* Phần hình ảnh và text */
+.room-details-item {
+    margin-bottom: 40px;
+}
+
+    .room-details-item img {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+/* Phần tiêu đề phòng */
+.rd-text {
+    padding: 20px 0;
+}
+.danhgia {
+    margin-left: auto;
+    margin-right: 10px;
+}
+    .danhgia span i {
+        color: gray; /* Mặc định sao là màu xám */
+        font-size: 20px;
+    }
+
+    .danhgia span.full i {
+        color: gold; /* Sao đầy đủ màu vàng */
+    }
+
+    .danhgia span.half i {
+        color: gold; /* Sao một phần màu vàng */
+        background: linear-gradient(to right, gold 50%, gray 50%);
+        -webkit-background-clip: text;
+        color: transparent; /* Để chỉ phần vàng hiển thị */
+    }
+
+.danhgia {
+    display: inline-flex; /* Sử dụng inline-flex để đặt các phần tử trên cùng một dòng */
+    align-items: center; /* Căn giữa theo chiều dọc */
+}
+
+    .danhgia span {
+        margin-right: 5px; /* Khoảng cách giữa các sao */
+    }
+
+.ratingtext {
+    font-size: 16px; /* Kích thước chữ cho text */
+    color: #333; /* Màu chữ */
+    display: inline-block; /* Đảm bảo text hiển thị inline với sao */
+}
+
+.rd-title h3 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    display: inline-block;
+    align-items: center;
+}
+.rd-title {
+    display: flex; /* Sử dụng Flexbox */
+    align-items: center; /* Canh giữa theo chiều dọc */
+}
+.rd-title .rdt-right {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+}
+
+.rd-title .rating {
+    color: #FFD700;
+    width: 100px;
+    height: 100px;
+}
+
+.rd-title a {
+    background-color: #f39c12;
+    color: #fff;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    margin-left: auto;
+    margin-right: 20px;
+}
+
+    .rd-title a:hover {
+        background-color: #e67e22;
+    }
+
+/* Phần giá phòng */
+h2 {
+    font-size: 32px;
+    font-weight: bold;
+    color: #f39c12;
+    margin-top: 20px;
+}
+
+    h2 span {
+        font-size: 18px;
+        color: #999;
+    }
+
+/* Tạo kiểu cho bảng thông tin phòng */
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    border: 1px solid #ddd;
+}
+
+    table th, table td {
+        padding: 12px;
+        text-align: left;
+        font-size: 16px;
+        color: #555;
+        border-bottom: 1px solid #ddd;
+    }
+
+    table th {
+        background-color: #f7f7f7;
+        font-weight: bold;
+    }
+
+.r-o {
+    font-weight: bold;
+    color: #333;
+}
+
+/* Phần mô tả chi tiết phòng */
+.f-para {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #555;
+    margin-top: 20px;
+}
+/* Container chính cho phần đặt phòng */
+.room-booking {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
+}
+
+    /* Tiêu đề của phần đặt phòng */
+    .room-booking h3 {
+        font-size: 28px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+/* Các trường nhập dữ liệu cho ngày */
+.check-date {
+    margin-bottom: 20px;
+}
+
+    .check-date label {
+        font-size: 16px;
+        font-weight: 500;
+        color: #555;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .check-date input.date-input {
+        width: 100%;
+        padding: 12px 20px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-sizing: border-box;
+        background-color: #f9f9f9;
+    }
+
+    .check-date i.icon_calendar {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #888;
+        font-size: 20px;
+    }
+
+/* Các trường chọn lựa cho khách và phòng */
+.select-option {
+    margin-bottom: 20px;
+}
+
+    .select-option label {
+        font-size: 16px;
+        font-weight: 500;
+        color: #555;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .select-option select {
+        width: 100%;
+        padding: 12px 20px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-sizing: border-box;
+        background-color: #f9f9f9;
+    }
+
+/* Nút submit */
+button[type="submit"] {
+    background-color: transparent;
+    color: #f39c12;
+    font-size: 16px;
+    width: 100%;
+    height: 50px;
+    border: solid 2px c;
+    font-family: 'Leelawadee UI', Lora;
+}
+.check {
+    text-transform: uppercase;  
+}
+.check:hover {
+    background-color: #f39c12;
+    color: white;
+}
+.star {
+    font-size: 20px;
+    color: black; /* Màu trắng cho sao chưa chọn */
+    cursor: pointer;
+}
+
+/* Container Reviews */
+.rd-reviews {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+    .rd-reviews h4 {
+        margin-bottom: 15px;
+        color: #333;
+        font-weight: bold;
+    }
+
+    .rd-reviews .comment {
+        padding: 10px 0;
+        border-bottom: 1px solid #ddd;
+    }
+
+        .rd-reviews .comment:last-child {
+            border-bottom: none;
+        }
+
+        .rd-reviews .comment strong {
+            color: #007bff;
+        }
+
+        .rd-reviews .comment small {
+            display: block;
+            margin-top: 5px;
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+/* Add Review Section */
+.review-add {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+    .review-add h4 {
+        margin-bottom: 15px;
+        color: #333;
+        font-weight: bold;
+    }
+
+    .review-add .form-group {
+        margin-bottom: 15px;
+    }
+
+        .review-add .form-group label {
+            font-weight: bold;
+            color: #333;
+        }
+
+/* Container dịch vụ phòng */
+/* Cột bên phải (container chứa phần đặt phòng và dịch vụ) */
+.col-lg-4 {
+    position: relative; /* Để có thể căn chỉnh phần dịch vụ ở góc trên bên phải */
+}
+
+/* Container dịch vụ phòng */
+.room-services {
+    position: absolute; /* Đặt phần dịch vụ tại vị trí tuyệt đối */
+    width: 300px; /* Giới hạn chiều rộng của phần dịch vụ */
+    margin-top: 50px; /* Loại bỏ margin trên */
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+    /* Tiêu đề của phần dịch vụ */
+    .room-services h4 {
+        font-size: 20px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+.service-item {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+.service-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.service-desc {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.service-price {
+    font-size: 16px;
+    font-weight: bold;
+    color: #e74c3c;
+}

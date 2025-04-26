@@ -1,0 +1,78 @@
+﻿@model IEnumerable<WebApplication1.Models.NHANVIEN>
+@{
+    ViewBag.Title = "DanhSachNhanVien";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>Danh sách nhân viên</h2>
+
+<p>
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createModal">
+        Create New
+    </button>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Mã nhân viên</th>
+            <th>Tên nhân viên</th>
+            <th>Chức vụ</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.MaNV)</td>
+                <td>@Html.DisplayFor(modelItem => item.HoTen)</td>
+                <td>@Html.DisplayFor(modelItem => item.ChucVu)</td>
+                <td>
+                    <button class="btn btn-warning btn-sm">
+                        @Html.ActionLink("Edit", "Edit", new { maNV = item.MaNV })
+                    </button>
+                    <button class="btn btn-info btn-sm">
+                        @Html.ActionLink("Detail", "Chitietnhanvien", new { maNV = item.MaNV })
+                    </button>
+                    <button class="btn btn-danger btn-sm">
+                        @Html.ActionLink("Delete", "Delete", new { maNV = item.MaNV }, new { @class = "text-white" })
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createModalLabel">Tạo mới Nhân Viên</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("Create", "QL_NhanVien", FormMethod.Post))
+                {
+                    <div class="mb-3">
+                        <label for="MaNV" class="form-label">Mã Nhân Viên</label>
+                        @Html.TextBox("MaNV", null, new { @class = "form-control", id = "MaNV" })
+                    </div>
+                    <div class="mb-3">
+                        <label for="HoTen" class="form-label">Họ Tên</label>
+                        @Html.TextBox("HoTen", null, new { @class = "form-control", id = "HoTen" })
+                    </div>
+                    <div class="mb-3">
+                        <label for="ChucVu" class="form-label">Chức Vụ</label>
+                        @Html.TextBox("ChucVu", null, new { @class = "form-control", id = "ChucVu" })
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Lưu</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

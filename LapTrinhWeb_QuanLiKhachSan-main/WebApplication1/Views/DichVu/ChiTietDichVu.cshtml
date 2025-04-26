@@ -1,0 +1,14 @@
+﻿@model WebApplication1.Models.DICHVU
+
+@{
+    ViewBag.Title = "Chi Tiết Dịch Vụ";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center">@Model.TenDV</h2>
+    <p class="text-center">@Html.Raw(Model.Mota)</p>
+    <p class="text-danger font-weight-bold text-center">Giá: @String.Format("{0:0,0} VND", Model.Gia)</p>
+    <div class="text-center mt-3">
+        <a href="@Url.Action("DSDichVu", "DichVu")" class="btn btn-secondary">Quay lại</a>
+    </div>
+</div>

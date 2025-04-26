@@ -1,0 +1,149 @@
+﻿/* General layout for services */
+.services-1 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px; /* Tăng khoảng cách bên trong */
+    margin: 15px; /* Tạo khoảng cách giữa các mục */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Thêm shadow nhẹ */
+    cursor: pointer;
+}
+
+    .services-1:hover {
+        transform: scale(1.05); /* Phóng to nhẹ khi hover */
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Shadow đậm hơn khi hover */
+    }
+
+    /* Heading and text styles */
+    .services-1 .heading {
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .services-1 p {
+        color: #555;
+        font-size: 14px;
+        line-height: 1.6;
+        margin-bottom: 15px;
+    }
+
+    .services-1 .text-danger {
+        font-size: 16px;
+        color: #d9534f;
+    }
+
+    /* Button styling */
+    .services-1 .btn {
+        background-color: #FF6F61;
+        color: white;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 14px;
+        text-decoration: none;
+        transition: background-color 0.3s;
+    }
+
+        .services-1 .btn:hover {
+            background-color: #e74c3c;
+        }
+
+/* Container and grid styling */
+.row {
+    display: flex;
+    flex-wrap: wrap; /* Đảm bảo các mục nằm trên nhiều hàng nếu cần */
+    justify-content: space-around; /* Căn đều các mục */
+}
+
+.ftco-section {
+    padding: 50px 0; /* Khoảng cách trên và dưới của section */
+}
+
+.heading-section {
+    margin-bottom: 30px;
+}
+
+    .heading-section h2 {
+        font-size: 28px;
+        color: #333;
+        font-weight: bold;
+    }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .services-1 {
+        margin: 10px;
+        padding: 15px;
+    }
+
+        .services-1 .heading {
+            font-size: 16px;
+        }
+
+        .services-1 p {
+            font-size: 13px;
+        }
+
+        .services-1 .btn {
+            font-size: 12px;
+        }
+}
+
+
+/*Services-2*/
+/* Phần tiện ích */
+.services-2 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px; /* Khoảng cách giữa các mục */
+    justify-content: center; /* Căn giữa theo chiều ngang */
+    align-items: flex-start; /* Căn đầu trên của các mục */
+    margin-top: 20px;
+}
+
+.service-item {
+    padding: 15px; /* Giảm padding để mục nhỏ lại */
+    width: 140px; /* Chiều rộng nhỏ hơn gấp đôi */
+    text-align: center;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+    .service-item:hover {
+        transform: scale(1.1);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .service-item .icon {
+        background-color: #FF6F61;
+        color: white;
+        border-radius: 50%;
+        padding: 10px; /* Giảm padding cho icon */
+        width: 50px; /* Kích thước nhỏ hơn gấp đôi */
+        height: 50px;
+        margin: 0 auto 10px;
+        font-size: 20px; /* Font-size nhỏ hơn gấp đôi */
+    }
+
+    .service-item h3 {
+        font-size: 14px; /* Font-size nhỏ hơn */
+        margin: 10px 0;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .service-item p {
+        font-size: 12px; /* Font-size nhỏ hơn */
+        line-height: 1.5;
+        color: #555;
+    }

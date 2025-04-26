@@ -1,0 +1,195 @@
+﻿@{
+    ViewBag.Title = "Liên Hệ";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- Cột 1: Form Liên Hệ -->
+        <div class="col-md-8">
+            <div class="form-container">
+                <h2>Liên Hệ</h2>
+
+                @if (ViewBag.Message != null)
+                {
+                    <div class="alert alert-success">@ViewBag.Message</div>
+                }
+
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger">@ViewBag.Error</div>
+                }
+
+                @using (Html.BeginForm("GuiLienHe", "LienHe", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form-group">
+                        <label for="tieuDe">Tiêu đề</label>
+                        <input type="text" class="form-control" id="tieuDe" name="tieuDe" placeholder="Nhập tiêu đề..." required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="noiDung">Nội dung</label>
+                        <textarea class="form-control" id="noiDung" name="noiDung" rows="5" placeholder="Nhập nội dung liên hệ..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Gửi</button>
+                }
+            </div>
+        </div>
+
+        <!-- Cột 2: Thông Tin Liên Hệ Của Chúng Tôi -->
+        <div class="col-md-4">
+            <div class="info-container">
+                <h3>Thông Tin Liên Hệ</h3>
+                <ul class="list-unstyled">
+                    <li><strong>Địa chỉ:</strong> 123 Phố XYZ, Quận ABC, Thành phố Vũng Tàu</li>
+                    <li><strong>Số điện thoại:</strong> +84 123 456 789</li>
+                    <li><strong>Email:</strong> support@luckyhotel.com</li>
+                    <li><strong>Giờ làm việc:</strong> 8:00 AM - 12:00 PM (Thứ Hai đến Chủ nhật)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Google Map -->
+    <div class="map-container mt-5">
+        <h4>Vị Trí Của Chúng Tôi</h4>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3924.5857036879297!2d107.12312777408229!3d10.374972866472255!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317571c7e73f8355%3A0x111e39d5b3c5e00e!2sAria%20V%C5%A9ng%20T%C3%A0u%20Hotel%20%26%20Resort!5e0!3m2!1svi!2s!4v1733283682923!5m2!1svi!2s" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+</div>
+<style>
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+.form-container {
+    max-width: 650px;
+    margin: 30px auto;  /* Giảm khoảng cách trên và dưới */
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px 30px;
+}
+
+.form-container h2 {
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+}
+
+.form-group label {
+    font-weight: bold;
+    color: #555;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.alert {
+    margin-top: 15px;
+    padding: 15px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+.info-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 30px;  /* Giảm khoảng cách giữa form và info-container */
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.info-container h3 {
+    margin-bottom: 15px;  /* Giảm khoảng cách giữa tiêu đề và nội dung */
+    text-align: center;
+    color: #333;
+    font-size: 24px; /* Tăng cỡ chữ cho tiêu đề */
+}
+
+.info-container ul {
+    padding-left: 0;
+}
+
+.info-container li {
+    margin-bottom: 8px; /* Giảm khoảng cách giữa các dòng thông tin */
+    font-size: 18px; /* Tăng cỡ chữ cho các mục thông tin */
+    color: #555;
+}
+
+.info-container li strong {
+    color: #007bff;
+}
+
+.map-container {
+    margin-top: 20px; /* Giảm khoảng cách giữa map-container và các phần tử trên */
+    text-align: center;
+}
+
+.map-container iframe {
+    border: 0;
+    width: 100%;
+    max-width: 100%;
+}
+
+@@media (max-width: 768px) {
+    .form-container {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .info-container {
+        margin-top: 20px;
+    }
+
+    .map-container iframe {
+        height: 350px;
+    }
+}
+
+
+</style>
