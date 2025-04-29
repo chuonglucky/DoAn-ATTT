@@ -76,7 +76,6 @@ namespace WebApplication1.Controllers
             return View(phong);
 
         }
-
         [HttpPost]
         public ActionResult ThemBinhLuan(string MaPH, string NoiDung, int DanhGia)
         {

@@ -17,14 +17,18 @@ namespace WebApplication1
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "TrangChu", action = "Index", id = UrlParameter.Optional },
-                namespaces: new[] {"WebApplication1.Controllers"}
+                namespaces: new[] { "WebApplication1.Controllers" }
             );
+
             routes.MapRoute(
                 name: "Trang tin",
                 url: "{metatitle}",
                 defaults: new { controller = "TrangChu", action = "TrangTin", metatitle = UrlParameter.Optional },
                 namespaces: new string[] { "WebApplication1.Controllers" }
             );
+
+            
+            
         }
     }
 }

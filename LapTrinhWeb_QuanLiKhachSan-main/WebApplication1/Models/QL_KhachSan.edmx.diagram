@@ -25,6 +25,8 @@
         <EntityTypeShape EntityType="QL_KhachSanModel.BINHLUAN" Width="1.5" PointX="5.25" PointY="4.5" />
         <AssociationConnector Association="QL_KhachSanModel.FK_BINHLUAN_KHACHHANG" />
         <AssociationConnector Association="QL_KhachSanModel.FK_BINHLUAN_PHONG" />
+        <EntityTypeShape EntityType="QL_KhachSanModel.DEVICE_INFO" Width="1.5" PointX="10.375" PointY="8.75" />
+        <EntityTypeShape EntityType="QL_KhachSanModel.sysdiagram" Width="1.5" PointX="11.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

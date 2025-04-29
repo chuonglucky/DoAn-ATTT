@@ -176,6 +176,9 @@
       <DependentUpon>QL_KhachSan.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DatPhongInfo.cs" />
+    <Compile Include="Models\DEVICE_INFO.cs">
+      <DependentUpon>QL_KhachSan.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DICHVU.cs">
       <DependentUpon>QL_KhachSan.tt</DependentUpon>
     </Compile>
@@ -215,6 +218,9 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>QL_KhachSan.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sysdiagram.cs">
+      <DependentUpon>QL_KhachSan.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\TRANGTIN.cs">
       <DependentUpon>QL_KhachSan.tt</DependentUpon>
@@ -318,6 +324,7 @@
       <DependentUpon>QL_KhachSan.edmx</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
+    <Content Include="Scripts\Captcha.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
     <Content Include="Scripts\jquery-3.7.0.slim.js" />

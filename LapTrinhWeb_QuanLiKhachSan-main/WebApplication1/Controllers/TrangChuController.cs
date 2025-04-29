@@ -48,6 +48,14 @@ namespace WebApplication1.Controllers
         {
             return PartialView("_SliderPartial");
         }
-        
+        public ActionResult TrangTin(string metatitle)
+        {
+            var trangTin = db.TRANGTINs.FirstOrDefault(x => x.MetaTitle == metatitle);
+            if (trangTin == null)
+            {
+                return HttpNotFound();
+            }
+            return View(trangTin);
+        }
     }
 }

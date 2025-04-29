@@ -37,5 +37,7 @@ namespace WebApplication1.Models
         public virtual DbSet<TRANGTIN> TRANGTINs { get; set; }
         public virtual DbSet<DATPHONG> DATPHONGs { get; set; }
         public virtual DbSet<BINHLUAN> BINHLUANs { get; set; }
+        public virtual DbSet<DEVICE_INFO> DEVICE_INFO { get; set; }
+        public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
     }
 }

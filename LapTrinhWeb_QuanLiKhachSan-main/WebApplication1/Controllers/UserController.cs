@@ -15,6 +15,9 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Facebook;
 using System.Text.RegularExpressions;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.Drawing;
 
 namespace WebApplication1.Controllers
 {
@@ -187,8 +190,21 @@ namespace WebApplication1.Controllers
 
 
         [HttpPost]
-        public ActionResult DangNhap(FormCollection collection)
+        public ActionResult DangNhap(FormCollection collection, string captchaInput)
         {
+            string sessionCaptcha = Session["CaptchaCode"] as string;
+
+            if (string.IsNullOrEmpty(sessionCaptcha) || captchaInput != sessionCaptcha)
+            {
+                ViewBag.ErrCaptcha = "Captcha không đúng. Vui lòng thử lại.";
+
+                // Generate lại Captcha mới cho người dùng
+                string captcha = GenerateCaptcha(5);
+                Session["CaptchaCode"] = captcha;
+                ViewBag.CaptchaCode = captcha;
+
+                return View();
+            }
             // Lấy dữ liệu từ form
             string sUsername = collection["username"];
             string sPassword = collection["password"];
@@ -212,9 +228,38 @@ namespace WebApplication1.Controllers
             // Kiểm tra thông tin đăng nhập
             var khachhang = db.KHACHHANGs
                 .FirstOrDefault(kh => kh.Username == sUsername && kh.Password == sPassword);
-
+            var device = db.DEVICE_INFO.FirstOrDefault(dev => dev.MaKH == khachhang.MaKH);
             if (khachhang != null)
             {
+                // --- Lấy thông tin thiết bị hiện tại ---
+                string ipAddress = Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+                if (string.IsNullOrEmpty(ipAddress))
+                {
+                    ipAddress = Request.ServerVariables["REMOTE_ADDR"];
+                }
+
+                string userAgent = Request.UserAgent ?? "Unknown"; // Thông tin trình duyệt / thiết bị
+
+                // --- So sánh với thông tin thiết bị đã lưu ---
+                bool isSameDevice = (device.UserAgent == userAgent && device.IPAddress == ipAddress);
+
+                if (!isSameDevice)
+                {
+                    // Nếu thiết bị khác, gửi mã xác nhận OTP
+                    var verificationCode = new Random().Next(100000, 999999).ToString();
+
+                    khachhang.EmailVerificationCode = verificationCode;
+                    khachhang.IsEmailVerified = false; // Chưa xác nhận lại
+                    db.SaveChanges();
+
+                    GuiEmailXacNhan(khachhang.Email, verificationCode); // Hàm này bạn đã có
+
+                    TempData["Email"] = khachhang.Email;
+                    TempData["UserId"] = khachhang.MaKH; // Hoặc Username
+                    ViewBag.ThongBao = "Thiết bị mới phát hiện! Vui lòng kiểm tra email để xác nhận.";
+
+                    return RedirectToAction("XacNhanEmailKhiDangNhap");
+                }
                 // Đăng nhập thành công
                 Session["User"] = khachhang; // Lưu user vào Session
 
@@ -334,6 +379,22 @@ namespace WebApplication1.Controllers
                         db.KHACHHANGs.Add(khachHang);
                         db.SaveChanges();
 
+                        string ipAddress = Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+                        if (string.IsNullOrEmpty(ipAddress) )
+                        {
+                            ipAddress = Request.ServerVariables["REMOTE_ADDR"];
+                        }
+                        string userAgent = Request.UserAgent;
+                        DEVICE_INFO deviceInfo = new DEVICE_INFO
+                        {
+                            MaKH = khachHang.MaKH, // hoặc UserId nếu bạn dùng
+                            IPAddress = ipAddress,
+                            UserAgent = userAgent,
+                            CreateAt = DateTime.Now
+                        };
+
+                        db.DEVICE_INFO.Add(deviceInfo);
+                        db.SaveChanges();
                         // Gửi mã xác nhận qua email
                         GuiEmailXacNhan(email, verificationCode);
 
@@ -578,16 +639,114 @@ namespace WebApplication1.Controllers
             // Điều hướng lại trang lịch sử
             return RedirectToAction("LichSuDatPhong");
         }
+        
+
 
         [HttpGet]
         public ActionResult QuenMatKhau()
         {
-            return View(); // Trả về view QuenMatKhau.cshtml
+            return View();
+        }
+        private void DrawNoise(Graphics g, int width, int height)
+        {
+            Random rand = new Random();
+
+            using (Pen pen = new Pen(Color.LightGray))
+            {
+                // Vẽ vài đường ngẫu nhiên
+                for (int i = 0; i < 10; i++)
+                {
+                    int x1 = rand.Next(width);
+                    int y1 = rand.Next(height);
+                    int x2 = rand.Next(width);
+                    int y2 = rand.Next(height);
+                    g.DrawLine(pen, x1, y1, x2, y2);
+                }
+            }
+
+            using (SolidBrush brush = new SolidBrush(Color.LightGray))
+            {
+                // Vẽ vài chấm ngẫu nhiên
+                for (int i = 0; i < 30; i++)
+                {
+                    int x = rand.Next(width);
+                    int y = rand.Next(height);
+                    g.FillEllipse(brush, x, y, 2, 2);
+                }
+            }
+        }
+
+        public ActionResult Generate()
+        {
+            string captchaText = GenerateCaptcha(5);
+            Session["CaptchaCode"] = captchaText;
+
+            using (Bitmap bmp = new Bitmap(150, 50))
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                g.Clear(Color.White);
+
+                using (Font font = new Font("Arial", 24, FontStyle.Italic))
+                using (Brush brush = new SolidBrush(Color.Black))
+                {
+                    // Xoay nghiêng chữ nhẹ
+                    Matrix transform = new Matrix();
+                    transform.Shear(-0.2f, 0f);
+                    g.Transform = transform;
+
+                    // Vẽ chữ
+                    g.DrawString(captchaText, font, brush, new PointF(10, 5));
+                }
+
+                // VẼ GẠCH NGANG QUA CHỮ
+                using (Pen linePen = new Pen(Color.Red, 2))
+                {
+                    int y = bmp.Height / 2; // gạch ngang giữa hình
+                    g.ResetTransform(); // bỏ shear trước khi vẽ line cho chuẩn
+                    g.DrawLine(linePen, new Point(0, y), new Point(bmp.Width, y));
+                }
+
+                // Vẽ thêm một vài đường nhiễu noise
+                DrawNoise(g, bmp.Width, bmp.Height);
+
+                using (var ms = new MemoryStream())
+                {
+                    bmp.Save(ms, ImageFormat.Png);
+                    return File(ms.ToArray(), "image/png");
+                }
+            }
+        }
+        private string GenerateCaptcha(int length)
+        {
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var random = new Random();
+            var captcha = new char[length];
+
+            for (int i = 0; i < length; i++)
+            {
+                captcha[i] = chars[random.Next(chars.Length)];
+            }
+
+            return new string(captcha);
         }
 
         [HttpPost]
-        public ActionResult QuenMatKhau(FormCollection collection)
+        public ActionResult QuenMatKhau(FormCollection collection, string captchaInput)
         {
+            string sessionCaptcha = Session["CaptchaCode"] as string;
+
+            if (string.IsNullOrEmpty(sessionCaptcha) || captchaInput != sessionCaptcha)
+            {
+                ViewBag.ErrCaptcha = "Captcha không đúng. Vui lòng thử lại.";
+
+                // Generate lại Captcha mới cho người dùng
+                string captcha = GenerateCaptcha(5);
+                Session["CaptchaCode"] = captcha;
+                ViewBag.CaptchaCode = captcha;
+
+                return View();
+            }
+
             string email = collection["email"];
 
             // Kiểm tra email có hợp lệ hay không

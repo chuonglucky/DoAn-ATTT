@@ -43,6 +43,21 @@
                     </div>
                     <a href="@Url.Action("QuenMatKhau", "User")" class="forgot-password">Forgot password?</a>
                 </div>
+                <div class="form-group">
+                    <label for="captcha">Captcha</label>
+                    <div class="captcha-section">
+                        <img id="captchaImage" src="/User/Generate" alt="Captcha" />
+
+                        <button type="button" onclick="reloadCaptcha()" class="reload-btn">
+                            Đổi Captcha
+                        </button>
+                    </div>
+                    <input type="text" id="captchaInput" name="captchaInput" class="form-control" placeholder="Enter captcha" required />
+                    @if (ViewBag.ErrCaptcha != null)
+                    {
+                        <span class="error">@ViewBag.ErrCaptcha</span>
+                    }
+                </div>
                 <h4 style="color:red; text-align:center;">@ViewBag.ThongBao</h4>
                 <div class="nut">
                     <button type="submit" class="btn-login">Log in</button>
@@ -67,3 +82,33 @@
         </div>
     </div>
 </div>
+
+<script>
+    function reloadCaptcha() {
+        var captchaImg = document.getElementById("captchaImage");
+        captchaImg.src = "/User/Generate?" + new Date().getTime(); // Thêm timestamp để load mới
+    }
+</script>
+<style>
+    /* Đặt lại các phần tử trong .captcha-section để căn chỉnh ngang */
+    .captcha-section {
+        display: flex;
+        justify-content: center; /* Căn giữa các phần tử */
+        align-items: center; /* Căn chỉnh theo chiều dọc */
+        margin-bottom: 20px;
+    }
+
+        .captcha-section img {
+            width: 150px; /* Điều chỉnh kích thước hình ảnh captcha */
+            height: auto;
+            margin-right: 10px; /* Khoảng cách giữa hình ảnh và nút */
+        }
+
+    .reload-btn {
+        border: none;
+        padding: 8px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+</style>
