@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.UI;
@@ -77,6 +78,7 @@ namespace WebApplication1.Controllers
 
         }
         [HttpPost]
+        [ValidateInput(false)]
         public ActionResult ThemBinhLuan(string MaPH, string NoiDung, int DanhGia)
         {
             // Kiểm tra xem người dùng đã đăng nhập chưa
@@ -89,6 +91,40 @@ namespace WebApplication1.Controllers
                 return RedirectToAction("DangNhap", "User");
             }
 
+            // Kiểm tra nội dung bình luận
+            if (string.IsNullOrEmpty(NoiDung?.Trim()))
+            {
+                TempData["ErrorMessage"] = "Vui lòng nhập nội dung bình luận.";
+                return RedirectToAction("ChiTietPhong", new { id = MaPH });
+            }
+
+            // YÊU CẦU 1: Kiểm tra giới hạn 100 từ
+            string[] words = NoiDung.Trim().Split(new[] { ' ', '\t', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+            if (words.Length > 100)
+            {
+                TempData["ErrorMessage"] = $"Bình luận không được vượt quá 100 từ. Bạn đã nhập {words.Length} từ.";
+                return RedirectToAction("ChiTietPhong", new { id = MaPH });
+            }
+
+            // YÊU CẦU 2: Kiểm tra bình luận trùng lặp
+            var existingComment = db.BINHLUANs
+                .Where(b => b.MaKH == khachHang.MaKH && b.MaPH == MaPH && b.NDBL == NoiDung)
+                .FirstOrDefault();
+
+            if (existingComment != null)
+            {
+                TempData["ErrorMessage"] = "Bạn đã gửi một bình luận với nội dung tương tự. Vui lòng nhập nội dung khác.";
+                return RedirectToAction("ChiTietPhong", new { id = MaPH });
+            }
+
+            // YÊU CẦU 3: Kiểm tra nội dung độc hại
+            if (ContainsHarmfulContent(NoiDung))
+            {
+                TempData["ErrorMessage"] = "Bình luận chứa nội dung không được phép.";
+                return RedirectToAction("ChiTietPhong", new { id = MaPH });
+            }
+
+            // Thêm bình luận vào CSDL
             if (ModelState.IsValid)
             {
                 BINHLUAN binhLuanMoi = new BINHLUAN
@@ -102,9 +138,42 @@ namespace WebApplication1.Controllers
 
                 db.BINHLUANs.Add(binhLuanMoi);
                 db.SaveChanges();
+                TempData["SuccessMessage"] = "Bình luận của bạn đã được gửi thành công!";
             }
 
-            return RedirectToAction("ChiTietPhong", new { id = MaPH});
+            return RedirectToAction("ChiTietPhong", new { id = MaPH });
+        }
+        private bool ContainsHarmfulContent(string content)
+        {
+            if (string.IsNullOrEmpty(content))
+                return false;
+
+            // Danh sách các mẫu regex để phát hiện nội dung độc hại
+            string[] harmfulPatterns = new string[]
+            {
+         @"<script[^>]*>",
+         @"javascript\s*:",
+         @"on\w+\s*=",  // onclick, onload, onerror, etc.
+         @"eval\s*\(",
+         @"document\.cookie",
+         @"<iframe",
+         @"alert\s*\(",
+         @"document\.location",
+         @"window\.location",
+         @"\.submit\s*\(",
+         // Thêm mẫu để phát hiện API key
+         @"\b(sk_live_|api_|key_)[a-zA-Z0-9_-]{20,}\b"
+            };
+
+            foreach (var pattern in harmfulPatterns)
+            {
+                if (Regex.IsMatch(content, pattern, RegexOptions.IgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
         [HttpPost]
         public ActionResult CheckAvailability(string MaPH, string CheckIn, string CheckOut)

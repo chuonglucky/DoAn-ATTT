@@ -35,6 +35,10 @@ namespace WebApplication1.Models
         public string EmailVerificationCode { get; set; }
         public Nullable<bool> IsEmailVerified { get; set; }
         public string Avatar { get; set; }
+        public Nullable<int> FailedLoginAttempts { get; set; }
+        public Nullable<bool> IsLocked { get; set; }
+        public Nullable<System.DateTime> LockoutEnd { get; set; }
+        public Nullable<System.DateTime> LastFailedLogin { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DATPHONG> DATPHONGs { get; set; }

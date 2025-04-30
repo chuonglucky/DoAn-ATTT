@@ -158,6 +158,7 @@
     <Compile Include="Controllers\DichVuController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LienHeController.cs" />
+    <Compile Include="Controllers\PasswordHelper.cs" />
     <Compile Include="Controllers\PhongController.cs" />
     <Compile Include="Controllers\TrangChuController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -335,6 +336,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="StyleCSS\alert.css" />
     <Content Include="StyleCSS\ChiTietPhong.css" />
     <Content Include="StyleCSS\DichVu.css" />
     <Content Include="StyleCSS\DanhSachPhong.css" />

@@ -2,7 +2,9 @@
     ViewBag.Title = "DangNhap";
     Layout = null;
 }
+
 <link rel="stylesheet" href="~/StyleCSS/DangNhap.css" />
+<link rel="stylesheet" href="~/StyleCSS/alert.css" />
 
 <div class="login-page">
     <div class="login-container">
@@ -15,11 +17,7 @@
                     <input type="text" id="username" name="username"
                            placeholder="Enter your username"
                            required
-                           value="@(Request.Cookies["Username"] != null ? Request.Cookies["Username"].Value : "")" />
-                    @if (ViewData["Err1"] != null)
-                    {
-                        <span class="error">@ViewData["Err1"]</span>
-                    }
+                           value="@(Request.Cookies["Username"]?.Value ?? "")" />
                 </div>
 
                 <div class="form-group">
@@ -27,7 +25,7 @@
                     <input type="password" id="password" name="password"
                            placeholder="Enter your password"
                            required
-                           value="@(Request.Cookies["Password"] != null ? Request.Cookies["Password"].Value : "")" />
+                           value="@(Request.Cookies["Password"]?.Value ?? "")" />
                     @if (ViewData["Err2"] != null)
                     {
                         <span class="error">@ViewData["Err2"]</span>
@@ -58,6 +56,7 @@
                         <span class="error">@ViewBag.ErrCaptcha</span>
                     }
                 </div>
+
                 <h4 style="color:red; text-align:center;">@ViewBag.ThongBao</h4>
                 <div class="nut">
                     <button type="submit" class="btn-login">Log in</button>
@@ -73,15 +72,19 @@
                     </button>
                 </div>
             </form>
+
             <div class="register-link">
                 <p>Don't have an account? <a href="/User/DangKy">Sign up</a></p>
             </div>
         </div>
+
         <div class="image-container">
             <img src="~/Images/Login.gif" alt="Illustration" />
         </div>
     </div>
 </div>
+
+<div id="toastContainer"></div>
 
 <script>
     function reloadCaptcha() {
@@ -112,3 +115,102 @@
         font-size: 14px;
     }
 </style>
+
+<script>
+   document.addEventListener('DOMContentLoaded', function () {
+        const toastContainer = document.getElementById('toastContainer');
+        const loginForm = document.getElementById('loginForm');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+
+        const message = @Html.Raw(Json.Encode(ViewBag.ToastMessage ?? ""));
+        const type = "@ViewBag.ToastType";
+
+        if (message !== "") {
+            showToast(message, type);
+
+            if (type === 'success') {
+                setTimeout(() => {
+                    window.location.href = '@Url.Action("Index", "TrangChu")';
+                }, 2000);
+            }
+        }
+
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.classList.add('toast', type);
+
+            let icon = type === 'success' ? '✅' : '❌';
+
+            toast.innerHTML = `
+                <span class="toast-icon">${icon}</span>
+                <span>${escapeHtml(message)}</span>
+            `;
+
+            toastContainer.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+
+            setTimeout(() => {
+                hideToast(toast);
+            }, 3000);
+        }
+
+        function hideToast(toast) {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                toast.remove();
+            }, 500);
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.appendChild(document.createTextNode(str));
+            return div.innerHTML;
+        }
+
+        // AJAX to check if username exists
+        usernameInput.addEventListener('blur', function () {
+            const username = usernameInput.value.trim();
+            if (username !== '') {
+                fetch('/User/CheckUsername?username=' + encodeURIComponent(username))
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.exists) {
+                            showToast("Tài khoản không tồn tại.", "error");
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error checking username:', error);
+                    });
+            }
+        });
+
+        loginForm.addEventListener('submit', function (event) {
+            toastContainer.innerHTML = '';
+
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            if (username === '' && password === '') {
+                event.preventDefault();
+                showToast("Vui lòng nhập thông tin đăng nhập.", "error");
+                return;
+            }
+
+            if (username === '') {
+                event.preventDefault();
+                showToast("Vui lòng nhập tên đăng nhập.", "error");
+                return;
+            }
+
+            if (password === '') {
+                event.preventDefault();
+                showToast("Vui lòng nhập mật khẩu.", "error");
+                return;
+            }
+        });
+    });
+</script>

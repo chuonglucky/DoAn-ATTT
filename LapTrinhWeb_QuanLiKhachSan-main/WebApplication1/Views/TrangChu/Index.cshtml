@@ -98,12 +98,12 @@
                         </div>
                     </div>
                 </a>
-                
+
             }
         </div>
         <!-- Grid Section -->
         <!--<div class="grid" id="favoriteRoomContainer">-->
-            <!-- Nội dung sẽ được sinh động -->
+        <!-- Nội dung sẽ được sinh động -->
         <!--</div>-->
     </section>
 
@@ -260,6 +260,7 @@
             .room-info p strong {
                 color: #000;
             }
+
     .danhgia {
         display: inline-flex;
         gap: 5px;
@@ -282,12 +283,131 @@
         .star.active i {
             color: #f39c12; /* Highlight the filled stars in yellow */
         }
-        
-        .phong:hover {
-            text-decoration: none;
-        }
+
+    .phong:hover {
+        text-decoration: none;
+    }
 </style>
 <script>
+
+    document.addEventListener('contextmenu', function (e) {
+        e.preventDefault();
+        alert("Không được sử dụng chuột phải!");
+    });
+
+    // Chặn các phím mở DevTools
+    document.addEventListener('keydown', function (e) {
+        // F12
+        if (e.key === "F12") {
+            e.preventDefault();
+            alert("Không được sử dụng F12!");
+        }
+
+        // Ctrl+Shift+I
+        if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "i") {
+            e.preventDefault();
+            alert("Không được mở DevTools!");
+        }
+
+        // Ctrl+Shift+J
+        if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "j") {
+            e.preventDefault();
+            alert("Không được mở bảng Console!");
+        }
+
+        // Ctrl+U (xem mã nguồn)
+        if (e.ctrlKey && e.key.toLowerCase() === "u") {
+            e.preventDefault();
+            alert("Không được xem mã nguồn!");
+        }
+
+        // Ctrl+Shift+C (Inspect element)
+        if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "c") {
+            e.preventDefault();
+            alert("Không được Inspect!");
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        let inactivityTimeout;
+        let countdownInterval;
+        let warningTimeout;
+        const inactivityLimit = 10000;
+        const countdownDuration = 5000;
+        const loginUrl = '@Url.Action("DangNhap", "User")';
+        function removeWarning() {
+            const warningDiv = document.getElementById('inactivityWarning');
+            if (warningDiv) {
+                warningDiv.remove();
+            }
+        }
+        function resetInactivityTimer() {
+            clearTimeout(inactivityTimeout);
+            clearTimeout(warningTimeout);
+            clearInterval(countdownInterval);
+            removeWarning();
+            inactivityTimeout = setTimeout(showWarning, inactivityLimit);
+        }
+
+        function showWarning() {
+            if (document.getElementById('inactivityWarning')) {
+                return;
+            }
+
+            const warningDiv = document.createElement('div');
+            warningDiv.id = 'inactivityWarning';
+            warningDiv.style.position = 'fixed';
+            warningDiv.style.top = '20px';
+            warningDiv.style.left = '50%';
+            warningDiv.style.transform = 'translateX(-50%)';
+            warningDiv.style.backgroundColor = 'rgba(255, 165, 0, 0.9)';
+            warningDiv.style.color = 'white';
+            warningDiv.style.padding = '25px';
+            warningDiv.style.borderRadius = '12px';
+            warningDiv.style.zIndex = '1000';
+            warningDiv.style.textAlign = 'center';
+            warningDiv.style.fontSize = '20px';
+            warningDiv.style.width = '400px';
+
+            warningDiv.innerHTML = 'Bạn sẽ bị chuyển hướng về trang đăng nhập trong <span id="countdown">N</span> giây! Nhấp vào bất kỳ đâu để hủy.';
+            document.body.appendChild(warningDiv);
+
+            let timeLeft = countdownDuration / 1000;
+            const countdownSpan = document.getElementById('countdown');
+            if (countdownSpan) {
+                countdownSpan.textContent = timeLeft;
+            }
+
+            countdownInterval = setInterval(() => {
+                timeLeft--;
+                if (countdownSpan) {
+                    countdownSpan.textContent = timeLeft;
+                }
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                }
+            }, 1000);
+            warningTimeout = setTimeout(() => {
+                clearInterval(countdownInterval);
+                removeWarning();
+                window.location.href = loginUrl;
+            }, countdownDuration);
+        }
+
+        const activityEvents = [
+            'mousemove',
+            'mousedown',
+            'keydown',
+            'touchstart',
+            'scroll'
+        ];
+        activityEvents.forEach(function(eventName) {
+            document.addEventListener(eventName, resetInactivityTimer, true);
+        });
+
+        resetInactivityTimer();
+    });
+
     const plansData = {
         beach: [
             {
@@ -471,5 +591,8 @@
     // Gọi hàm khi trang được tải
     generateFavoriteRooms();
 
+
+
 </script>
+
 

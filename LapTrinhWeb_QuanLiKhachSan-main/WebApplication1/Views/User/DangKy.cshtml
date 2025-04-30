@@ -3,6 +3,8 @@
     Layout = null;
 }
 
+<link rel="stylesheet" href="~/StyleCSS/alert.css" />
+
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -105,60 +107,60 @@
             .login-link a:hover {
                 text-decoration: underline;
             }
-
 </style>
+
 <div class="register-page">
     <div class="register-container">
         <h2>Sign Up</h2>
         <p>Please fill in your details</p>
-        <form method="post" action="/User/DangKy">
+        <form method="post" action="/User/DangKy" id="registerForm">
             <div class="form-group">
                 <label for="HoTen">Full Name</label>
-                <input type="text" id="HoTen" name="HoTen" placeholder="Enter your full name" required />
+                <input type="text" id="HoTen" name="HoTen" placeholder="Enter your full name" value="@ViewBag.HoTen" />
             </div>
             <div class="form-group">
                 <label for="DiaChi">Address</label>
-                <input type="text" id="DiaChi" name="DiaChi" placeholder="Enter your address" required />
+                <input type="text" id="DiaChi" name="DiaChi" placeholder="Enter your address" value="@ViewBag.DiaChi" />
             </div>
             <div class="form-group">
                 <label for="DienThoai">Phone Number</label>
-                <input type="text" id="DienThoai" name="DienThoai" placeholder="Enter your phone number" required />
+                <input type="text" id="DienThoai" name="DienThoai" placeholder="Enter your phone number" value="@ViewBag.DienThoai" />
             </div>
             <div class="form-group">
                 <label for="GioiTinh">Gender</label>
-                <select id="GioiTinh" name="GioiTinh" required>
-                    <option value="Nam">Male</option>
-                    <option value="Nữ">Female</option>
+                <select id="GioiTinh" name="GioiTinh">
+                    <option value="" @(string.IsNullOrEmpty(ViewBag.GioiTinh) ? "selected" : "")>Select gender</option>
+                    <option value="Nam" @(ViewBag.GioiTinh == "Nam" ? "selected" : "")>Male</option>
+                    <option value="Nữ" @(ViewBag.GioiTinh == "Nữ" ? "selected" : "")>Female</option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="CCCD">CCCD:</label>
-                <input type="text" id="CCCD" name="CCCD" placeholder="Nhập số CCCD" required />
+                <label for="CCCD">CCCD</label>
+                <input type="text" id="CCCD" name="CCCD" placeholder="Nhập số CCCD" value="@ViewBag.CCCD" />
             </div>
-
             <div class="form-group">
                 <label for="NgaySinh">Date of Birth</label>
-                <input type="date" id="NgaySinh" name="NgaySinh" required />
+                <input type="date" id="NgaySinh" name="NgaySinh" value="@ViewBag.NgaySinh" />
             </div>
             <div class="form-group">
                 <label for="QuocTich">Nationality</label>
-                <input type="text" id="QuocTich" name="QuocTich" placeholder="Enter your nationality" required />
+                <input type="text" id="QuocTich" name="QuocTich" placeholder="Enter your nationality" value="@ViewBag.QuocTich" />
             </div>
             <div class="form-group">
                 <label for="Email">Email</label>
-                <input type="email" id="Email" name="Email" placeholder="Enter your email" required />
+                <input type="email" id="Email" name="Email" placeholder="Enter your email" value="@ViewBag.Email" />
             </div>
             <div class="form-group">
                 <label for="Username">Username</label>
-                <input type="text" id="Username" name="Username" placeholder="Enter your username" required />
+                <input type="text" id="Username" name="Username" placeholder="Enter your username" value="@ViewBag.Username" />
             </div>
             <div class="form-group">
                 <label for="Password">Password</label>
-                <input type="password" id="Password" name="Password" placeholder="Enter your password" required />
+                <input type="password" id="Password" name="Password" placeholder="Enter your password" value="@ViewBag.Password" />
             </div>
             <div class="form-group">
                 <label for="ConfirmPassword">Confirm Password</label>
-                <input type="password" id="ConfirmPassword" name="ConfirmPassword" placeholder="Confirm your password" required />
+                <input type="password" id="ConfirmPassword" name="ConfirmPassword" placeholder="Confirm your password" value="@ViewBag.ConfirmPassword" />
             </div>
             <button type="submit" class="btn-register">Sign Up</button>
         </form>
@@ -167,3 +169,126 @@
         </div>
     </div>
 </div>
+
+<div id="toastContainer"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const toastContainer = document.getElementById('toastContainer');
+        const registerForm = document.getElementById('registerForm');
+        const hoTenInput = document.getElementById('HoTen');
+        const diaChiInput = document.getElementById('DiaChi');
+        const dienThoaiInput = document.getElementById('DienThoai');
+        const cccdInput = document.getElementById('CCCD');
+        const emailInput = document.getElementById('Email');
+        const usernameInput = document.getElementById('Username');
+        const passwordInput = document.getElementById('Password');
+        const confirmPasswordInput = document.getElementById('ConfirmPassword');
+
+        const message = @Html.Raw(Json.Encode(ViewBag.ToastMessage ?? ""));
+        const type = "@ViewBag.ToastType";
+
+        if (message !== "") {
+            showToast(message, type);
+
+            if (type === 'success') {
+                setTimeout(() => {
+                    window.location.href = '@Url.Action("DangNhap", "User")';
+                }, 2000);
+            }
+        }
+
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.classList.add('toast', type);
+
+            let icon = type === 'success' ? '✅' : '❌';
+
+            toast.innerHTML = `
+                <span class="toast-icon">${icon}</span>
+                <span>${escapeHtml(message)}</span>
+            `;
+
+            toastContainer.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+
+            setTimeout(() => {
+                hideToast(toast);
+            }, 3000);
+        }
+
+        function hideToast(toast) {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                toast.remove();
+            }, 500);
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.appendChild(document.createTextNode(str));
+            return div.innerHTML;
+        }
+
+        // AJAX to check if email exists
+        emailInput.addEventListener('blur', function () {
+            const email = emailInput.value.trim();
+            if (email !== '') {
+                fetch('/User/CheckEmail?email=' + encodeURIComponent(email))
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.exists) {
+                            showToast("Email đã được sử dụng. Vui lòng chọn email khác.", "error");
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error checking email:', error);
+                    });
+            }
+        });
+
+        registerForm.addEventListener('submit', function (event) {
+            toastContainer.innerHTML = '';
+
+            let hasError = false;
+            let errorMessage = '';
+
+            if (hoTenInput.value.trim() === '') {
+                hasError = true;
+                errorMessage = "Vui lòng nhập họ tên.";
+            } else if (diaChiInput.value.trim() === '') {
+                hasError = true;
+                errorMessage = "Vui lòng nhập địa chỉ.";
+            } else if (dienThoaiInput.value.trim() === '') {
+                hasError = true;
+                errorMessage = "Vui lòng nhập số điện thoại.";
+            } else if (cccdInput.value.trim() === '') {
+                hasError = true;
+                errorMessage = "Vui lòng nhập số CCCD.";
+            } else if (emailInput.value.trim() === '') {
+                hasError = true;
+                errorMessage = "Vui lòng nhập email.";
+            } else if (usernameInput.value.trim() === '') {
+                hasError = true;
+                errorMessage = "Vui lòng nhập tên đăng nhập.";
+            } else if (passwordInput.value.trim() === '') {
+                hasError = true;
+                errorMessage = "Vui lòng nhập mật khẩu.";
+            } else if (confirmPasswordInput.value.trim() === '') {
+                hasError = true;
+                errorMessage = "Vui lòng nhập xác nhận mật khẩu.";
+            } else if (passwordInput.value !== confirmPasswordInput.value) {
+                hasError = true;
+                errorMessage = "Mật khẩu xác nhận không khớp.";
+            }
+
+            if (hasError) {
+                event.preventDefault();
+                showToast(errorMessage, "error");
+            }
+        });
+    });
+</script>

@@ -150,7 +150,7 @@ namespace WebApplication1.Controllers
                     return RedirectToAction("DangNhap");
 
                 }
-                
+
 
                 KHACHHANG kh = db.KHACHHANGs.SingleOrDefault(u => u.Email == email);
                 if (kh == null)
@@ -193,114 +193,91 @@ namespace WebApplication1.Controllers
         public ActionResult DangNhap(FormCollection collection, string captchaInput)
         {
             string sessionCaptcha = Session["CaptchaCode"] as string;
-
             if (string.IsNullOrEmpty(sessionCaptcha) || captchaInput != sessionCaptcha)
             {
                 ViewBag.ErrCaptcha = "Captcha không đúng. Vui lòng thử lại.";
-
-                // Generate lại Captcha mới cho người dùng
                 string captcha = GenerateCaptcha(5);
                 Session["CaptchaCode"] = captcha;
                 ViewBag.CaptchaCode = captcha;
-
                 return View();
             }
-            // Lấy dữ liệu từ form
+
             string sUsername = collection["username"];
-            string sPassword = collection["password"];
-            string remember = collection["remember"]; // Giá trị checkbox remember
-
-            // Kiểm tra thông tin đầu vào
-            if (string.IsNullOrEmpty(sUsername))
+            string remember = collection["remember"];
+            // Mã hóa mật khẩu với MD5
+            string hashedPassword = PasswordHelper.HashPasswordWithMD5(collection["password"]);
+            if (string.IsNullOrWhiteSpace(sUsername) || string.IsNullOrWhiteSpace(hashedPassword))
             {
-                ViewData["Err1"] = "Bạn chưa nhập tên đăng nhập.";
+                ViewBag.ToastMessage = "Vui lòng nhập đầy đủ thông tin đăng nhập.";
+                ViewBag.ToastType = "error";
                 return View();
             }
 
-            if (string.IsNullOrEmpty(sPassword))
+            var khachhang = db.KHACHHANGs.FirstOrDefault(kh => kh.Username == sUsername);
+            if (khachhang == null)
             {
-                ViewData["Err2"] = "Bạn chưa nhập mật khẩu.";
+                ViewBag.ThongBao = "Tên đăng nhập không tồn tại!";
                 return View();
             }
 
-            
-
-            // Kiểm tra thông tin đăng nhập
-            var khachhang = db.KHACHHANGs
-                .FirstOrDefault(kh => kh.Username == sUsername && kh.Password == sPassword);
-            var device = db.DEVICE_INFO.FirstOrDefault(dev => dev.MaKH == khachhang.MaKH);
-            if (khachhang != null)
+            // Kiểm tra khóa tài khoản
+            if (khachhang.IsLocked.GetValueOrDefault(false) && khachhang.LockoutEnd > DateTime.Now)
             {
-                // --- Lấy thông tin thiết bị hiện tại ---
-                string ipAddress = Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
-                if (string.IsNullOrEmpty(ipAddress))
+                var timeRemaining = (khachhang.LockoutEnd.Value - DateTime.Now).TotalSeconds;
+                ViewBag.ToastMessage = $"Tài khoản bị khóa. Vui lòng thử lại sau {Math.Ceiling(timeRemaining)} giây.";
+                ViewBag.ToastType = "error";
+                return View();
+            }
+
+            if (khachhang.Password != hashedPassword)
+            {
+                khachhang.FailedLoginAttempts += 1;
+                khachhang.LastFailedLogin = DateTime.Now;
+
+                if (khachhang.FailedLoginAttempts >= 5)
                 {
-                    ipAddress = Request.ServerVariables["REMOTE_ADDR"];
-                }
-
-                string userAgent = Request.UserAgent ?? "Unknown"; // Thông tin trình duyệt / thiết bị
-
-                // --- So sánh với thông tin thiết bị đã lưu ---
-                bool isSameDevice = (device.UserAgent == userAgent && device.IPAddress == ipAddress);
-
-                if (!isSameDevice)
-                {
-                    // Nếu thiết bị khác, gửi mã xác nhận OTP
-                    var verificationCode = new Random().Next(100000, 999999).ToString();
-
-                    khachhang.EmailVerificationCode = verificationCode;
-                    khachhang.IsEmailVerified = false; // Chưa xác nhận lại
-                    db.SaveChanges();
-
-                    GuiEmailXacNhan(khachhang.Email, verificationCode); // Hàm này bạn đã có
-
-                    TempData["Email"] = khachhang.Email;
-                    TempData["UserId"] = khachhang.MaKH; // Hoặc Username
-                    ViewBag.ThongBao = "Thiết bị mới phát hiện! Vui lòng kiểm tra email để xác nhận.";
-
-                    return RedirectToAction("XacNhanEmailKhiDangNhap");
-                }
-                // Đăng nhập thành công
-                Session["User"] = khachhang; // Lưu user vào Session
-
-                if (!string.IsNullOrEmpty(remember) && remember == "on")
-                {
-                    // Tạo cookie lưu thông tin đăng nhập trong 30 ngày
-                    HttpCookie usernameCookie = new HttpCookie("Username", sUsername)
-                    {
-                        Expires = DateTime.Now.AddDays(30) // Thời hạn 30 ngày
-                    };
-
-                    HttpCookie passwordCookie = new HttpCookie("Password", sPassword)
-                    {
-                        Expires = DateTime.Now.AddDays(30) // Thời hạn 30 ngày
-                    };
-
-                    Response.Cookies.Add(usernameCookie);
-                    Response.Cookies.Add(passwordCookie);
+                    khachhang.IsLocked = true;
+                    khachhang.LockoutEnd = DateTime.Now.AddSeconds(10);
+                    ViewBag.ToastMessage = "Tài khoản bị khóa 10 giây do nhập sai mật khẩu quá nhiều.";
                 }
                 else
                 {
-                    // Xóa cookies nếu người dùng không chọn "Remember"
-                    if (Request.Cookies["Username"] != null)
-                    {
-                        Response.Cookies["Username"].Expires = DateTime.Now.AddDays(-1);
-                    }
-
-                    if (Request.Cookies["Password"] != null)
-                    {
-                        Response.Cookies["Password"].Expires = DateTime.Now.AddDays(-1);
-                    }
+                    ViewBag.ToastMessage = $"Mật khẩu sai. Bạn còn {5 - khachhang.FailedLoginAttempts} lần thử.";
                 }
 
-                return RedirectToAction("Index", "TrangChu"); // Chuyển hướng về trang chính
+                ViewBag.ToastType = "error";
+                db.SaveChanges();
+                return View();
+            }
+
+            // Mật khẩu đúng → reset trạng thái
+            khachhang.FailedLoginAttempts = 0;
+            khachhang.IsLocked = false;
+            khachhang.LockoutEnd = null;
+            khachhang.LastFailedLogin = null;
+
+           
+
+            // Đăng nhập thành công
+            Session["User"] = khachhang;
+
+            if (!string.IsNullOrEmpty(remember) && remember == "on")
+            {
+                Response.Cookies.Add(new HttpCookie("Username", sUsername) { Expires = DateTime.Now.AddDays(30) });
+                Response.Cookies.Add(new HttpCookie("Password", hashedPassword) { Expires = DateTime.Now.AddDays(30) });
             }
             else
             {
-                ViewBag.ThongBao = "Tên đăng nhập hoặc mật khẩu không đúng!";
-                return View();
+                if (Request.Cookies["Username"] != null)
+                    Response.Cookies["Username"].Expires = DateTime.Now.AddDays(-1);
+                if (Request.Cookies["Password"] != null)
+                    Response.Cookies["Password"].Expires = DateTime.Now.AddDays(-1);
             }
+
+            db.SaveChanges();
+            return RedirectToAction("Index", "TrangChu");
         }
+
 
 
         public ActionResult DangKy()
@@ -323,94 +300,115 @@ namespace WebApplication1.Controllers
             var xacNhanMatKhau = collection["ConfirmPassword"];
             var cccd = collection["CCCD"];
 
-            if (string.IsNullOrEmpty(tenDangNhap))
+
+            void GanViewBag()
             {
-                ViewData["Err1"] = "Vui lòng nhập tên đăng nhập.";
+                ViewBag.HoTen = hoTen;
+                ViewBag.DiaChi = diaChi;
+                ViewBag.DienThoai = dienThoai;
+                ViewBag.GioiTinh = gioiTinh;
+                ViewBag.NgaySinh = ngaySinh;
+                ViewBag.QuocTich = quocTich;
+                ViewBag.Email = email;
+                ViewBag.Username = tenDangNhap;
+                ViewBag.Password = matKhau;
+                ViewBag.ConfirmPassword = xacNhanMatKhau;
+                ViewBag.CCCD = cccd;
             }
-            else if (string.IsNullOrEmpty(matKhau))
+
+            // Kiểm tra các trường bắt buộc (bỏ NgaySinh, GioiTinh, QuocTich)
+            if (string.IsNullOrWhiteSpace(hoTen) || string.IsNullOrWhiteSpace(diaChi) ||
+            string.IsNullOrWhiteSpace(dienThoai) || string.IsNullOrWhiteSpace(email) ||
+            string.IsNullOrWhiteSpace(tenDangNhap) || string.IsNullOrWhiteSpace(matKhau) ||
+            string.IsNullOrWhiteSpace(xacNhanMatKhau) || string.IsNullOrWhiteSpace(cccd))
             {
-                ViewData["Err2"] = "Vui lòng nhập mật khẩu.";
+                if (string.IsNullOrWhiteSpace(hoTen))
+                    ViewBag.ToastMessage = "Vui lòng nhập họ tên.";
+                else if (string.IsNullOrWhiteSpace(diaChi))
+                    ViewBag.ToastMessage = "Vui lòng nhập địa chỉ.";
+                else if (string.IsNullOrWhiteSpace(dienThoai))
+                    ViewBag.ToastMessage = "Vui lòng nhập số điện thoại.";
+                else if (string.IsNullOrWhiteSpace(email))
+                    ViewBag.ToastMessage = "Vui lòng nhập email.";
+                else if (string.IsNullOrWhiteSpace(tenDangNhap))
+                    ViewBag.ToastMessage = "Vui lòng nhập tên đăng nhập.";
+                else if (string.IsNullOrWhiteSpace(matKhau))
+                    ViewBag.ToastMessage = "Vui lòng nhập mật khẩu.";
+                else if (string.IsNullOrWhiteSpace(xacNhanMatKhau))
+                    ViewBag.ToastMessage = "Vui lòng nhập xác nhận mật khẩu.";
+                else
+                    ViewBag.ToastMessage = "Vui lòng nhập số CCCD.";
+
+                ViewBag.ToastType = "error";
+                GanViewBag();
+                return View();
             }
-            else if (matKhau != xacNhanMatKhau)
+
+            // Kiểm tra mật khẩu xác nhận
+            if (matKhau != xacNhanMatKhau)
             {
-                ViewData["Err3"] = "Mật khẩu xác nhận không khớp.";
+                ViewBag.ToastMessage = "Mật khẩu xác nhận không khớp.";
+                ViewBag.ToastType = "error";
+                GanViewBag();
+                return View();
             }
-            else if (string.IsNullOrEmpty(email))
+
+
+            // Kiểm tra tồn tại
+            var userTrung = db.KHACHHANGs.FirstOrDefault(u => u.Username == tenDangNhap || u.Email == email || u.CCCD == cccd);
+            if (userTrung != null)
             {
-                ViewData["Err4"] = "Vui lòng nhập email.";
+                if (userTrung.Username == tenDangNhap)
+                    ViewBag.ToastMessage = "Tên đăng nhập đã tồn tại.";
+                else if (userTrung.Email == email)
+                    ViewBag.ToastMessage = "Email đã được sử dụng.";
+                else
+                    ViewBag.ToastMessage = "Số CCCD đã được sử dụng.";
+                ViewBag.ToastType = "error";
+                GanViewBag();
+                return View();
             }
-            else if (string.IsNullOrEmpty(cccd))
+
+            try
             {
-                ViewData["Err5"] = "Vui lòng nhập số CCCD.";
-            }
-            else
-            {
-                try
+                var verificationCode = new Random().Next(100000, 999999).ToString();
+                string hashedPassword = PasswordHelper.HashPasswordWithMD5(matKhau);  // Mã hóa mật khẩu với MD5
+                KHACHHANG kh = new KHACHHANG
                 {
-                    // Kiểm tra tài khoản đã tồn tại
-                    var existingUser = db.KHACHHANGs.FirstOrDefault(u => u.Username == tenDangNhap || u.Email == email || u.CCCD == cccd);
-                    if (existingUser != null)
-                    {
-                        ViewData["Err1"] = "Tên đăng nhập, email hoặc CCCD đã tồn tại.";
-                    }
-                    else
-                    {
-                        // Tạo mã xác nhận
-                        var verificationCode = new Random().Next(100000, 999999).ToString();
+                    MaKH = "KH" + Guid.NewGuid().ToString("N").Substring(0, 8).ToUpper(),
+                    HoTen = hoTen,
+                    DiaChi = diaChi,
+                    DienThoai = dienThoai,
+                    GioiTinh = gioiTinh,
+                    NgaySinh = !string.IsNullOrEmpty(ngaySinh) ? DateTime.Parse(ngaySinh) : (DateTime?)null,
+                    QuocTich = quocTich,
+                    Email = email,
+                    Username = tenDangNhap,
+                    Password = hashedPassword,  // Lưu mật khẩu đã mã hóa
+                    CCCD = cccd,
+                    EmailVerificationCode = verificationCode,
+                    IsEmailVerified = false,
+                    IsLocked = false,
+                    FailedLoginAttempts = 0,
+                };
 
-                        // Tạo người dùng mới
-                        KHACHHANG khachHang = new KHACHHANG
-                        {
-                            MaKH = "KH" + Guid.NewGuid().ToString("N").Substring(0, 8).ToUpper(),
-                            HoTen = hoTen,
-                            DiaChi = diaChi,
-                            DienThoai = dienThoai,
-                            GioiTinh = gioiTinh,
-                            NgaySinh = !string.IsNullOrEmpty(ngaySinh) ? DateTime.Parse(ngaySinh) : (DateTime?)null,
-                            QuocTich = quocTich,
-                            Email = email,
-                            Username = tenDangNhap,
-                            Password = matKhau,
-                            CCCD = cccd,
-                            EmailVerificationCode = verificationCode,
-                            IsEmailVerified = false
-                        };
+                db.KHACHHANGs.Add(kh);
+                db.SaveChanges();
 
-                        db.KHACHHANGs.Add(khachHang);
-                        db.SaveChanges();
 
-                        string ipAddress = Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
-                        if (string.IsNullOrEmpty(ipAddress) )
-                        {
-                            ipAddress = Request.ServerVariables["REMOTE_ADDR"];
-                        }
-                        string userAgent = Request.UserAgent;
-                        DEVICE_INFO deviceInfo = new DEVICE_INFO
-                        {
-                            MaKH = khachHang.MaKH, // hoặc UserId nếu bạn dùng
-                            IPAddress = ipAddress,
-                            UserAgent = userAgent,
-                            CreateAt = DateTime.Now
-                        };
-
-                        db.DEVICE_INFO.Add(deviceInfo);
-                        db.SaveChanges();
-                        // Gửi mã xác nhận qua email
-                        GuiEmailXacNhan(email, verificationCode);
-
-                        // Lưu thông tin mã xác nhận
-                        TempData["Email"] = email;
-                        ViewBag.ThongBao = "Mã xác nhận đã được gửi đến email của bạn. Vui lòng kiểm tra!";
-                        return RedirectToAction("XacNhanEmail");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    ViewBag.ThongBao = "Có lỗi xảy ra: " + ex.Message;
-                }
+                // Gửi mã xác nhận
+                GuiEmailXacNhan(email, verificationCode);
+                Session["Email"] = email;
+                ViewBag.ThongBao = "Mã xác nhận đã được gửi đến email của bạn. Vui lòng kiểm tra!";
+                return RedirectToAction("XacNhanEmail");
             }
-
-            return View();
+            catch (Exception ex)
+            {
+                ViewBag.ToastMessage = "Lỗi xảy ra: " + ex.Message;
+                ViewBag.ToastType = "error";
+                GanViewBag();
+                return View();
+            }
         }
 
 
@@ -464,7 +462,7 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public ActionResult XacNhanEmail(string verificationCode)
         {
-            var email = TempData["Email"]?.ToString(); // Lấy email từ TempData đã lưu trong quá trình đăng ký
+            var email = Session["Email"]?.ToString(); // Lấy email từ TempData đã lưu trong quá trình đăng ký
 
             if (!string.IsNullOrEmpty(email))
             {
@@ -477,8 +475,7 @@ namespace WebApplication1.Controllers
                     user.IsEmailVerified = true;
                     user.EmailVerificationCode = null; // Xóa mã xác nhận
                     db.SaveChanges();
-
-                    ViewBag.ThongBao = "Xác nhận email thành công! Bạn đã có thể đăng nhập.";
+                    Session.Remove("Email"); // Xóa email khỏi Session
                     return RedirectToAction("DangNhap");
                 }
                 else
@@ -819,11 +816,12 @@ namespace WebApplication1.Controllers
             }
 
             var khachhang = db.KHACHHANGs.FirstOrDefault(k => k.Email == email);
-
+            // Mã hóa mật khẩu mới trước khi lưu vào CSDL
+            string hashedPassword = PasswordHelper.HashPasswordWithMD5(newPassword); // Mã hóa mật khẩu mới
             if (khachhang != null)
             {
                 // Mã hóa mật khẩu mới trước khi lưu vào CSDL
-                khachhang.Password = newPassword;
+                khachhang.Password = hashedPassword;
 
                 // Lưu mật khẩu mới vào CSDL
                 db.SaveChanges();
@@ -865,9 +863,10 @@ namespace WebApplication1.Controllers
                 TempData["ErrEmail"] = "Không tìm thấy người dùng với email này!";
                 return View();
             }
-
+            // Mã hóa mật khẩu mới trước khi lưu vào CSDL
+            string oldhashedPassword = PasswordHelper.HashPasswordWithMD5(oldPassword); // Mã hóa mật khẩu mới
             // So sánh mật khẩu cũ
-            if (khachhang.Password != oldPassword)
+            if (khachhang.Password != oldhashedPassword)
             {
                 TempData["ErrOldPassword"] = "Mật khẩu cũ không đúng!";
                 return View();
@@ -886,9 +885,10 @@ namespace WebApplication1.Controllers
                 TempData["ErrPassword"] = "Mật khẩu mới phải có ít nhất 6 ký tự!";
                 return View();
             }
-
             // Mã hóa mật khẩu mới trước khi lưu vào CSDL
-            khachhang.Password = newPassword;
+            string newhashedPassword = PasswordHelper.HashPasswordWithMD5(newPassword); // Mã hóa mật khẩu mới
+            // Mã hóa mật khẩu mới trước khi lưu vào CSDL
+            khachhang.Password = newhashedPassword;
 
             // Lưu mật khẩu mới vào CSDL
             db.SaveChanges();

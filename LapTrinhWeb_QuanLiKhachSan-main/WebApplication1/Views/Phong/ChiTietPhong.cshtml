@@ -1,15 +1,17 @@
-﻿@{
+﻿
+@{
     ViewBag.Title = "Chi Tiết Phòng";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var cus = (WebApplication1.Models.KHACHHANG)Session["User"];
+    var cus = Session["User"] as WebApplication1.Models.KHACHHANG;
     var dichVuList = ViewBag.DichVuList as List<WebApplication1.Models.DICHVU>;
 }
-@model WebApplication1.Models.PHONG
-<link rel="stylesheet" href="~/StyleCSS/ChiTietPhong.css" />
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!-- Thư viện jQuery UI -->
+@model WebApplication1.Models.PHONG
+
+<link rel="stylesheet" href="~/StyleCSS/ChiTietPhong.css" />
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 
 <section class="room-details-section spad">
@@ -17,13 +19,11 @@
         <div class="row">
             <div class="col-lg-8">
                 <div class="room-details-item">
-                    <img src="~/Images/Sliders/@Model.Anh" alt="">
+                    <img src="~/Images/Sliders/@Model.Anh" alt="@Model.SoPH" class="img-fluid">
                     <div class="rd-text">
                         <div class="rd-title">
                             <h3>Phòng @Model.SoPH</h3>
-
-
-                            <a href="@Url.Action("DatPhong", "DatPhong", new { MaPH = Model.MaPH })" class="booking-now-btn">Booking Now</a>
+                            <a href="@Url.Action("DatPhong", "DatPhong", new { MaPH = Model.MaPH })" class="booking-now-btn btn btn-primary">Booking Now</a>
                         </div>
                         <div class="danhgia">
                             <span data-value="1"><i class="fas fa-star"></i></span>
@@ -32,8 +32,7 @@
                             <span data-value="4"><i class="fas fa-star"></i></span>
                             <span data-value="5"><i class="fas fa-star"></i></span>
                         </div>
-
-                        <p class="ratingtext"> (@(Math.Round(ViewBag.Avg, 1)) / 5.0)</p>
+                        <p class="ratingtext">(@(Math.Round(ViewBag.Avg, 1)) / 5.0)</p>
                         <h2>@(Model.Gia.HasValue ? Model.Gia.Value.ToString("#,0") : "0") VND <span>/Pernight</span></h2>
                         <table>
                             <tbody>
@@ -45,20 +44,19 @@
                                     <td class="r-o">Nội thất:</td>
                                     <td>@Model.NoiThat</td>
                                 </tr>
-
                             </tbody>
                         </table>
                         <p class="f-para">
                             @if (string.IsNullOrEmpty(Model.Mota?.Trim()))
                             {
-                            <p> </p>
-                        }
-                        else
-                        {
-                            @Html.Raw(Model.Mota.ToString().Replace("\n", "</p><p>&nbsp&nbsp&nbsp&nbsp&nbsp"))
-                        }
-                            </p>
-                        </div>
+                                <span>Không có mô tả.</span>
+                            }
+                            else
+                            {
+                                @Html.Raw(Model.Mota.Replace("\n", "</p><p>     "))
+                            }
+                        </p>
+                    </div>
                 </div>
                 <!-- Phần đánh giá -->
                 <div class="rd-reviews">
@@ -66,26 +64,37 @@
                     @foreach (var binhLuan in ViewBag.BinhLuans as List<WebApplication1.Models.CMMD>)
                     {
                         <div class="comment">
-                            <p><strong> @binhLuan.HoTenKhachHang:</strong></p>
+                            <p><strong>@binhLuan.HoTenKhachHang:</strong></p>
                             <p>@binhLuan.NoiDung</p>
                             <small>Đánh giá: @binhLuan.DanhGia sao | Thời gian: @binhLuan.ThoiGian</small>
                             <hr />
                         </div>
                     }
                 </div>
+                <!-- Phần thêm bình luận -->
                 <div class="review-add">
                     <h4>Add Review</h4>
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+                    }
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+                    }
                     @if (cus != null)
                     {
-                        using (Html.BeginForm("ThemBinhLuan", "Phong", FormMethod.Post))
+                        using (Html.BeginForm("ThemBinhLuan", "Phong", FormMethod.Post, new { id = "binhLuanForm" }))
                         {
+                            @Html.AntiForgeryToken()
                             @Html.HiddenFor(model => model.MaPH)
                             <div class="form-group">
-                                @Html.Label("Nội dung")
-                                @Html.TextArea("NoiDung", new { @class = "form-control", rows = 4 })
+                                <label for="NoiDung">Nội dung</label>
+                                @Html.TextArea("NoiDung", new { @class = "form-control", rows = 4, id = "NoiDung" })
+                                <small id="wordCount" class="form-text text-muted">Còn lại: 100 từ</small>
                             </div>
                             <div class="form-group">
-                                @Html.Label("Đánh giá")
+                                <label>Đánh giá</label>
                                 <div class="rating" style="font-size: 30px; cursor: pointer;">
                                     <span class="star" data-value="1"><i class="fas fa-star"></i></span>
                                     <span class="star" data-value="2"><i class="fas fa-star"></i></span>
@@ -93,7 +102,7 @@
                                     <span class="star" data-value="4"><i class="fas fa-star"></i></span>
                                     <span class="star" data-value="5"><i class="fas fa-star"></i></span>
                                 </div>
-                                @Html.Hidden("DanhGia", "1")
+                                @Html.Hidden("DanhGia", "1", new { id = "DanhGia" })
                             </div>
                             <button type="submit" class="btn btn-primary">Gửi bình luận</button>
                         }
@@ -104,10 +113,8 @@
                     }
                 </div>
             </div>
-
             <!-- Cột bên phải -->
             <div class="col-lg-4">
-                <!-- Phần đặt phòng -->
                 <div class="room-booking">
                     <h3>Your Reservation</h3>
                     <form id="reservation-form" action="#" method="POST">
@@ -119,12 +126,10 @@
                             <label for="date-out">Check Out:</label>
                             <input type="text" class="date-input" id="date-out" name="check-out">
                         </div>
-                        <button type="submit" class="check">Check Availability</button>
+                        <button type="submit" class="check btn btn-primary">Check Availability</button>
                     </form>
-                    <div id="availability-result"></div> <!-- Kết quả thông báo về tình trạng phòng -->
+                    <div id="availability-result"></div>
                 </div>
-
-                <!-- Phần danh sách dịch vụ -->
                 <div class="room-services">
                     <h4>Danh Sách Dịch Vụ</h4>
                     @if (dichVuList != null && dichVuList.Any())
@@ -140,7 +145,7 @@
                                     }
                                     else
                                     {
-                                        @Html.Raw(dichVu.Mota.Length > 50 ? dichVu.Mota.Substring(0, 50) + "..." : dichVu.Mota)
+                                        @(dichVu.Mota.Length > 50 ? dichVu.Mota.Substring(0, 50) + "..." : dichVu.Mota)
                                     }
                                 </p>
                                 <p class="service-price">Giá: @String.Format("{0:0,0} VND", dichVu.Gia)</p>
@@ -153,22 +158,20 @@
                         <p>Không có dịch vụ nào để hiển thị.</p>
                     }
                 </div>
-
             </div>
         </div>
     </div>
 </section>
 
 <script>
-    $(document).ready(function () {
-    // Kích hoạt Datepicker cho các trường ngày
+$(document).ready(function () {
+    // Kích hoạt Datepicker
     $("#date-in, #date-out").datepicker({
-        dateFormat: 'yy-mm-dd',  // Định dạng ngày
-        minDate: 0,  // Ngày tối thiểu có thể chọn
-        autoclose: true,  // Đóng calendar tự động khi chọn ngày
+        dateFormat: 'yy-mm-dd',
+        minDate: 0,
+        autoclose: true,
         onClose: function (selectedDate) {
-            // Đồng bộ check-out sau khi chọn check-ina
-            if (this.id == "date-in" && selectedDate !== "") {
+            if (this.id === "date-in" && selectedDate !== "") {
                 var checkOutDate = $("#date-out").val();
                 if (checkOutDate && selectedDate > checkOutDate) {
                     $("#date-out").val(selectedDate);
@@ -177,98 +180,124 @@
         }
     });
 
+    // Xử lý form đặt phòng
     $("#reservation-form").submit(function (event) {
-        event.preventDefault(); 
-
-        // Lấy dữ liệu từ form
+        event.preventDefault();
         var checkIn = $("#date-in").val();
         var checkOut = $("#date-out").val();
-        var maPH = "@Model.MaPH";  
+        var maPH = "@Model.MaPH";
 
-        // Kiểm tra nếu ngày chưa được chọn
         if (!checkIn || !checkOut) {
             $("#availability-result").html("<p class='error'>Vui lòng chọn ngày check-in và check-out.</p>");
             return;
         }
 
-        // Gửi yêu cầu Ajax
         $.ajax({
-            url: "@Url.Action("CheckAvailability", "Phong")",  // URL action trong Controller
+            url: "@Url.Action("CheckAvailability", "Phong")",
             type: "POST",
-            data: {
-                MaPH: maPH,
-                CheckIn: checkIn,
-                CheckOut: checkOut
-            },
+            data: { MaPH: maPH, CheckIn: checkIn, CheckOut: checkOut },
             success: function (response) {
-                if (response.available) {
-                    $("#availability-result").html("<p class='success'>Phòng còn trống. Bạn có thể đặt phòng ngay.</p>");
-                } else {
-                    $("#availability-result").html("<p class='error'>" + response.message + "</p>");
-                }
+                $("#availability-result").html(response.available
+                    ? "<p class='success'>Phòng còn trống. Bạn có thể đặt phòng ngay.</p>"
+                    : "<p class='error'>" + response.message + "</p>");
             },
-            error: function (xhr, status, error) {
+            error: function () {
                 $("#availability-result").html("<p class='error'>Có lỗi xảy ra. Vui lòng thử lại sau.</p>");
             }
         });
     });
-    });
-    $(document).ready(function () {
-        let selectedRating = 0;  // luu  rating
-        // Xử lý khi click vào sao
-        $('.star').click(function () {
-            selectedRating = $(this).data('value');  // Lưu giá trị rating của sao đã chọn
-            updateStars(selectedRating);
-            $('#rating-value').text(selectedRating);  // Hiển thị giá trị rating đã chọn
-        });
-        // Cập nhật màu sắc sao khi hover
-        $('.star').mouseover(function () {
-            let rating = $(this).data('value');
-            updateStars(rating);
-        });
-        // Quay lại trạng thái ban đầu khi mouseout
-        $('.star').mouseout(function () {
-            updateStars(selectedRating);
-        });
-        function updateStars(rating) {
-            $('.star').each(function () {
-                if ($(this).data('value') <= rating) {
-                    $(this).css('color', 'gold');  // Sao vàng nếu đã được chọn
-                } else {
-                    $(this).css('color', 'grey');  // Sao xám nếu chưa được chọn
-                }
-            });
-        }
-    });
-    $(document).ready(function () {
-        $(".star").on("click", function () {
-            var ratingValue = $(this).data("value");
-            // Cập nhật giá trị trong input hidden
-            $("input[name='DanhGia']").val(ratingValue);
-            $(".star").each(function () {
-                if ($(this).data("value") <= ratingValue) {
-                    $(this).html('<i class="fas fa-star"></i>');  // Sao đã chọn
-                } else {
-                    $(this).html('<i class="far fa-star"></i>');  // Sao chưa chọn
-                }
-            });
-        });
-    });
+
+    // Hiển thị sao đánh giá trung bình
     var rating = @ViewBag.Avg;
-
-    var stars = document.querySelectorAll('.danhgia span');
-
-    stars.forEach(function (star, index) {
-        // Chuyển đổi sao thành chỉ số bắt đầu từ 1
+    $(".danhgia span").each(function (index) {
         var starValue = index + 1;
-
-        // Gán sao đầy đủ
         if (starValue <= Math.floor(rating)) {
-            star.classList.add('full');
-        }
-        // Gán sao một phần
-        else if (starValue - 0.5 <= rating && starValue > rating) {
-            star.classList.add('half');
+            $(this).addClass("full").css("color", "gold");
+        } else if (starValue - 0.5 <= rating && starValue > rating) {
+            $(this).addClass("half").css("color", "gold");
         }
     });
+
+    // Xử lý đánh giá sao
+    let selectedRating = 1;
+    $("#DanhGia").val(selectedRating);
+
+    $(".rating .star").on("click", function () {
+        selectedRating = $(this).data("value");
+        $("#DanhGia").val(selectedRating);
+        updateStars(selectedRating);
+    });
+
+    $(".rating .star").hover(
+        function () {
+            updateStarsHover($(this).data("value"));
+        },
+        function () {
+            updateStars(selectedRating);
+        }
+    );
+
+    function updateStars(rating) {
+        $(".rating .star").each(function () {
+            $(this).css("color", $(this).data("value") <= rating ? "gold" : "#ccc");
+        });
+    }
+
+    function updateStarsHover(rating) {
+        $(".rating .star").each(function () {
+            $(this).css("color", $(this).data("value") <= rating ? "gold" : "#ccc");
+        });
+    }
+
+    updateStars(selectedRating);
+
+    // Kiểm tra số từ và nội dung bình luận
+    $("#NoiDung").on("input", function () {
+        let text = $(this).val();
+        let words = text.trim().split(/\s+/);
+        let wordCount = text.trim() ? words.length : 0;
+        let remainingWords = 100 - wordCount;
+
+        $("#wordCount").css("color", remainingWords < 0 ? "red" : "inherit")
+            .text("Còn lại: " + (remainingWords >= 0 ? remainingWords : 0) + " từ");
+    });
+
+    // Kiểm tra nội dung trước khi gửi
+    $("#binhLuanForm").submit(function (event) {
+        let noiDung = $("#NoiDung").val();
+
+        if (!noiDung.trim()) {
+            event.preventDefault();
+            alert("Vui lòng nhập nội dung bình luận.");
+            return false;
+        }
+
+        let words = noiDung.trim().split(/\s+/);
+        if (words.length > 100) {
+            event.preventDefault();
+            alert("Bình luận không được vượt quá 100 từ. Bạn đã nhập " + words.length + " từ.");
+            return false;
+        }
+
+        let suspiciousPatterns = [
+            /<script/i,
+            /javascript:/i,
+            /<iframe/i,
+            /onclick/i,
+            /onerror/i,
+            /onload/i,
+            /eval\(/i,
+            /document\.cookie/i,
+            /\b(sk_live_|api_|key_|token_|secret_|bearer_)[a-zA-Z0-9_-]{15,}\b/i
+        ];
+
+        for (let pattern of suspiciousPatterns) {
+            if (pattern.test(noiDung)) {
+                event.preventDefault();
+                alert("Bình luận chứa nội dung không được phép, bao gồm mã API key hoặc nội dung nhạy cảm.");
+                return false;
+            }
+        }
+    });
+});
 </script>

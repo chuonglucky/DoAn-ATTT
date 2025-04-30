@@ -79,6 +79,10 @@
           <Property Name="EmailVerificationCode" Type="varchar" MaxLength="10" />
           <Property Name="IsEmailVerified" Type="bit" />
           <Property Name="Avatar" Type="nvarchar" MaxLength="50" />
+          <Property Name="FailedLoginAttempts" Type="int" />
+          <Property Name="IsLocked" Type="bit" />
+          <Property Name="LockoutEnd" Type="datetime" />
+          <Property Name="LastFailedLogin" Type="datetime" />
         </EntityType>
         <EntityType Name="LichSuThayDoi">
           <Key>
@@ -355,6 +359,10 @@
           <Property Name="Avatar" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="DATPHONGs" Relationship="QL_KhachSanModel.FK_DATPHONG_KHACHHANG" FromRole="KHACHHANG" ToRole="DATPHONG" />
           <NavigationProperty Name="BINHLUANs" Relationship="QL_KhachSanModel.FK_BINHLUAN_KHACHHANG" FromRole="KHACHHANG" ToRole="BINHLUAN" />
+          <Property Name="FailedLoginAttempts" Type="Int32" />
+          <Property Name="IsLocked" Type="Boolean" />
+          <Property Name="LockoutEnd" Type="DateTime" Precision="3" />
+          <Property Name="LastFailedLogin" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="LOAIPHONG">
           <Key>
@@ -675,6 +683,10 @@
           <EntitySetMapping Name="KHACHHANGs">
             <EntityTypeMapping TypeName="QL_KhachSanModel.KHACHHANG">
               <MappingFragment StoreEntitySet="KHACHHANG">
+                <ScalarProperty Name="LastFailedLogin" ColumnName="LastFailedLogin" />
+                <ScalarProperty Name="LockoutEnd" ColumnName="LockoutEnd" />
+                <ScalarProperty Name="IsLocked" ColumnName="IsLocked" />
+                <ScalarProperty Name="FailedLoginAttempts" ColumnName="FailedLoginAttempts" />
                 <ScalarProperty Name="Avatar" ColumnName="Avatar" />
                 <ScalarProperty Name="IsEmailVerified" ColumnName="IsEmailVerified" />
                 <ScalarProperty Name="EmailVerificationCode" ColumnName="EmailVerificationCode" />

@@ -1,0 +1,59 @@
+﻿#toastContainer {
+    position: fixed;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.toast {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: #ffffff;
+    padding: 16px 24px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    min-width: 300px;
+    max-width: 420px;
+    text-align: left;
+    font-size: 16px;
+    font-weight: 500;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.4s ease;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+}
+
+    .toast.success {
+        color: #2e7d32;
+        border-color: #a5d6a7;
+    }
+
+        .toast.success .toast-icon {
+            color: #2e7d32; /* Sửa màu icon thành màu chữ */
+        }
+
+    .toast.error {
+        color: #d32f2f;
+        border-color: #ef9a9a;
+    }
+
+        .toast.error .toast-icon {
+            color: #d32f2f; /* Sửa màu icon thành màu chữ */
+        }
+
+    .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+.toast-icon {
+    font-size: 22px;
+    line-height: 1;
+}
